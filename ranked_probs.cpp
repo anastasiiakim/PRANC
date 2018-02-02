@@ -1031,9 +1031,9 @@ int main()
 
     string strGT;
     string strTops;
-    ifstream finGT("gtuniqtrees.txt");
-    ifstream fintops("gtuniqtops.txt");
-    ofstream finprobGT("probForEachGT.txt");
+    ifstream finGT("gt.txt");
+    ifstream fintops("topos.txt");
+    ofstream finprobGT("out_probs.txt");
 
     double total_prob = 0;
     int treecounter = 0;
@@ -1152,13 +1152,14 @@ int main()
                 }
             calc_k_ijz(k, N, m_i, ar_y, ar_rankns);//*, m_i);
             prob_val += geneTreeProbability(m_i, k, s, array_invcoal, N);
-            //     cout << "get_prob = " << geneTreeProbability(m_i, k, s, N)  << " " << log(geneTreeProbability(m_i, k, s, N)) <<  endl;
+            //   cout << "get_prob = " << geneTreeProbability(m_i, k, s, N)  << " " << log(geneTreeProbability(m_i, k, s, N)) <<  endl;
             //   cout << "prob_of_history = " << setprecision(10) << prob_val << " " << log(prob_val) << endl;
             history_counter++;
         
         }
         total_prob += prob_val;
         finprobGT << setprecision(15)  << prob_val <<  '\t' << strTops << '\n'; 
+//        finprobGT << setprecision(15)  << prob_val << '\n'; 
 
         //	cout << "Prob of GT = " << setprecision(15) << prob_val << endl;
 
