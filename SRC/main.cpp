@@ -5,7 +5,6 @@
 #include <cmath>
 #include <vector> 
 #include <iomanip> 
-#define eps 1e-8
 
 #include "node.h"
 #include "string_manipulations.h"
