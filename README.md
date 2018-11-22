@@ -6,7 +6,7 @@ After downloading the source code, type
 ```
 make
 ```
-
+This will create an executable called ranked, which can be futher run with some input options listed below.
 
 # Usage
 Program options:
