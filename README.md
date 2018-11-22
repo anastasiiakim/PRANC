@@ -3,7 +3,9 @@ can be used to compute probabilities of ranked or unranked phylogenetic gene tre
 
 # Installation
 After downloading the source code, type
-<span style="background-color: #FFFF00">Marked text</span>
+```
+make
+```
 
 
 # Usage
