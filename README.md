@@ -16,5 +16,12 @@ Program options:
 | -rprob        | <ul><li>input a species tree file</li><li>input a file containing ranked gene trees (with branch lengths)</li><li> input a file containing gene tree topologies (optional)</li></ul>|<ul><li>STtopo.txt</li><li>probForEachGT.txt</li></ul>|
 | -uprob        | <ul><li>input a species tree file</li><li>input a file containing unranked gene trees (without branch lengths)</li></ul>| <ul><li>STtopo.txt</li><li>outUnrGT.txt</li></ul>|
 
+The input may look like this:
+```
+./ranked -rprob <species-tree-file-name> <ranked-gene-tree-file-name>
+./ranked -uprob <species-tree-file-name> <unranked-gene-tree-file-name>
+```
+Note: all input files should be in the Newick format.
+
 ## Examples
 
