@@ -9,6 +9,6 @@ Program options:
 
 | Option        | Input files   | Output files                   |
 | ------------- |:-------------:| ------------------------------:|
-| -rprob        | input a species tree file | STtopo.txt, probForEachTree.txt|
+| -rprob        | input a species tree file \\gg| STtopo.txt, probForEachTree.txt|
 |               | input a file containing gene trees      |      |
 | -uprob        | centered      | STtopo.txt, outUnrGT.txt       |
