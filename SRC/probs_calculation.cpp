@@ -203,7 +203,7 @@ void getRanks(Node* newnode, int & tail, Node ** &ar)
         if((tail > 0) && (tempnode -> time == ar[tail - 1] -> time) && (tempnode -> time > 0))
         {
             int x;
-            cout << "Warning: some ranks are tied. Rand assignment of ranks was applied." << endl;		
+            //cout << "Warning: some ranks are tied. Rand assignment of ranks was applied." << endl;		
             k--;	
             x = rand()%(k1-k+1)+k;
             tempnode -> rank = x;
