@@ -2,6 +2,8 @@
 can be used to compute probabilities of ranked or unranked phylogenetic gene trees given a species tree under coalescent process.  
 
 # Installation
+After downloading the source code, type
+<mark>Marked text</mark>
 
 
 # Usage
