@@ -27,23 +27,18 @@ double getBranchLengths (int  i, string & str)
     while(static_cast<int> (str[i] - '0') >= 0 && static_cast<int> (str[i] - '0') <= 9 && i < (int) (str.size()-1))
     {
         temp = temp * 10 + (double) (str[i] - '0');
-        // cout << "i = " << i << endl; 
         if(str[i+1] == '.')
         {
             ++i;
-            // while(str[i+1] != ',' && str[i+1] != ')' && str[i+1] != ' ')
             while(str[i+1] != ',' && str[i+1] != ')' && str[i+1] != ' '  && str[i+1] != ';')
             {
                 //added section to treat scient. notation
-             //   cout << "str[" << i+1 << "] = " << str[i+1] << endl;
-                //  cout << "i = " << i << endl; 
                 if(str[i+1] == 'e' && str[i+2] == '-')
                 {
                     i = i+2;
                     while(str[i+1] != ',' && str[i+1] != ')' && str[i+1] != ' '  && str[i+1] != ';')
                     {
                         tempsc = tempsc * 10 + double (str[i+1] - '0');
-                        //   cout << tempsc << endl;
                         ++i;
                     }
                     return (temp + decim) * pow(10, -tempsc);
@@ -59,8 +54,6 @@ double getBranchLengths (int  i, string & str)
                     }
                     return (temp + decim) * pow(10, tempsc);
                 }
-
-                //
                 decim +=  (double) (str[i+1] - '0') * tmp;
                 tmp *= 0.1;
                 ++i;
