@@ -21,7 +21,17 @@ The input may look like this:
 ./ranked -rprob <species-tree-file-name> <ranked-gene-tree-file-name>
 ./ranked -uprob <species-tree-file-name> <unranked-gene-tree-file-name>
 ```
-Note: all input files should be in the Newick format.
+Note: all input files should be in the Newick format. All trees are treates as rooted binary trees. The species tree assumed to be an ultrametric.  
+
+```
+\begin{tikzpicture}
+  \draw[thick, level distance=3em] node{Root}
+    child{ node{Child} }
+    child{ node{Child} [sibling distance=3cm]
+      child{ node{Grandchild} }
+      child{ node{Grandchild} } };
+\end{tikzpicture}
+```
 
 ## Examples
 
