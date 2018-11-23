@@ -23,7 +23,7 @@ When using *-rprob* option, the input may look like this:
 ./ranked -rprob <species-tree-file-name> <ranked-gene-tree-file-name> <gene-tree-topology-file-name>
 ```
 where 
-> <ranked-gene-tree-file-name> contains one or more gene trees with specified branch lengths in the Newick format. The taxon names of gene trees should match the taxon names of the corresponding species tree.   
+> ```<ranked-gene-tree-file-name>``` contains one or more gene trees with specified branch lengths in the Newick format. The taxon names of gene trees should match the taxon names of the corresponding species tree.   
 
 ```
 ./ranked -uprob <species-tree-file-name> <unranked-gene-tree-file-name>
