@@ -24,6 +24,11 @@ The input may look like this:
 Note: all input files should be in the Newick format. All trees are treates as rooted binary trees. The species tree assumed to be an ultrametric.  
 
 ```
+$$
+\frac{n!}{k!(n-k)!} = {n \choose k}
+$$
+```
+```
 \begin{tikzpicture}
   \draw[thick, level distance=3em] node{Root}
     child{ node{Child} }
