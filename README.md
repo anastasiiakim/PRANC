@@ -23,14 +23,6 @@ The input may look like this:
 ```
 Note: all input files should be in the Newick format. All trees are treates as rooted binary trees. The species tree assumed to be an ultrametric (leaves of the tree are all equidistant from the root).  
 
-```
-<p align="center"><img src="https://rawgit.com/anastasiiakim/ranked_probs/master/svgs/32737e0a8d5a4cf32ba3ab1b74902ab7.svg?invert_in_darkmode" align=middle width=127.89183pt height=39.30498pt/></p>
-```
-
-```
-<p align="center"><img src="https://rawgit.com/anastasiiakim/ranked_probs/master/svgs/ed8e99f2b3f7a873819ad793ebc15ae1.svg" align=middle width=421.4991pt height=33.965745pt/></p>
-
-```
 
 
 ## Examples
