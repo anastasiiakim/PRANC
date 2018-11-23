@@ -16,17 +16,15 @@ Program options:
 | -rprob        | <ul><li>input a species tree file</li><li>input a file containing ranked gene trees (with branch lengths)</li><li> input a file containing gene tree topologies (optional)</li></ul>|<ul><li>STtopo.txt</li><li>probForEachGT.txt</li></ul>|
 | -uprob        | <ul><li>input a species tree file</li><li>input a file containing unranked gene trees (without branch lengths)</li></ul>| <ul><li>STtopo.txt</li><li>outUnrGT.txt</li></ul>|
 
-All input files should be in the Newick format. All trees are treated as rooted binary trees. We assume an ultrametric species tree (leaves of the tree are all equidistant from the root).  
+All input files should be in the Newick format. All trees are treated as rooted binary trees. We assume an ultrametric species tree (leaves of the tree are all equidistant from the root). User can run *ranked-coal* with either *-rprob* or *-uprob* option as shown below.  
 
-When using *-rprob* option, the input may look like this:
 ```
 ./ranked -rprob <species-tree-file-name> <ranked-gene-tree-file-name> <gene-tree-topology-file-name>
 ```
 * ```<ranked-gene-tree-file-name>``` contains one or more gene trees with specified branch lengths in the Newick format. The taxon names of gene trees should match the taxon names of the corresponding species tree.   
 * ```<gene-tree-topology-file-name>``` (optional input file) contains corresponding gene tree topologies (see Examples). 
-The program outputs a species tree topology in *STtopo.txt* and probabilities of gene tree topologies along with topologies (if input file is given) in *probForEachGT.txt*.
+The program outputs a species tree topology in *STtopo.txt* and gene tree topologies along with corresponding probabilities (if input file is given) in *probForEachGT.txt*.
   
-When using *-uprob* option, the input will look like this:
 ```
 ./ranked -uprob <species-tree-file-name> <unranked-gene-tree-file-name>
 ```
