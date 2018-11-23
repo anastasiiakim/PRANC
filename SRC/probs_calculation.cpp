@@ -986,7 +986,8 @@ void calcRankedProb(int & arg_counter, char* argv[], int & N, Node * newnode, do
 
     }
 
-    // cout <<  "TOTAL: " << setprecision(15)  << prec_total_prob << endl;
+    //cout <<  "TOTAL: " << setprecision(15)  << prec_total_prob << endl;
+    cout <<  "Total: " << prec_total_prob << endl;
 
     delete [] array_invcoal;
     for(int i = 0; i < N-1; ++i)

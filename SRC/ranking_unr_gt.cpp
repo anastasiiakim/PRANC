@@ -391,6 +391,8 @@ void calcUnrankedProb(int & arg_counter, char * argv[], int & N, Node * newnode,
 
     }
     
+    cout << "Total: " << TOTAL_PROBABILITY << endl; 
+
     delete [] ranks;
     delete [] array_invcoal;
     
