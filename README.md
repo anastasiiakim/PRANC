@@ -23,8 +23,9 @@ When using *-rprob* option, the input may look like this:
 ./ranked -rprob <species-tree-file-name> <ranked-gene-tree-file-name> <gene-tree-topology-file-name>
 ```
 where 
-> ```<ranked-gene-tree-file-name>``` contains one or more gene trees with specified branch lengths in the Newick format. The taxon names of gene trees should match the taxon names of the corresponding species tree.   
-> ```<gene-tree-topology-file-name>``` (optional input file) contains corresponding gene tree topologies (see Examples). 
+> * ```<ranked-gene-tree-file-name>``` contains one or more gene trees with specified branch lengths in the Newick format. The taxon names of gene trees should match the taxon names of the corresponding species tree.   
+> * ```<gene-tree-topology-file-name>``` (optional input file) contains corresponding gene tree topologies (see Examples). 
+
 The program outputs a species tree topology in *STtopo.txt* and probabilities of gene tree topologies along with topologies (if input file is given) in *probForEachGT.txt*.
   
 When using *-uprob* option, the input will look like this:
