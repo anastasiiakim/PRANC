@@ -24,18 +24,10 @@ The input may look like this:
 Note: all input files should be in the Newick format. All trees are treates as rooted binary trees. The species tree assumed to be an ultrametric.  
 
 ```
-$$
-\frac{n!}{k!(n-k)!} = {n \choose k}
-$$
+<p align="center"><img src="https://rawgit.com/anastasiiakim/ranked_probs/None/svgs/32737e0a8d5a4cf32ba3ab1b74902ab7.svg?invert_in_darkmode" align=middle width=127.89183pt height=39.30498pt/></p>
 ```
 ```
-\begin{tikzpicture}
-  \draw[thick, level distance=3em] node{Root}
-    child{ node{Child} }
-    child{ node{Child} [sibling distance=3cm]
-      child{ node{Grandchild} }
-      child{ node{Grandchild} } };
-\end{tikzpicture}
+<p align="center"><img src="https://rawgit.com/anastasiiakim/ranked_probs/None/svgs/82d10f5787d4ca7bf99a377a7a4c8ef4.svg?invert_in_darkmode" align=middle width=697.94505pt height=35.19318pt/></p>
 ```
 
 ## Examples
