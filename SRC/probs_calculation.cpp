@@ -930,7 +930,7 @@ void calcRankedProb(int & arg_counter, char* argv[], int & N, Node * newnode, do
     ifstream finGT(argv[arg_counter]); //gtuniqtrees.txt
     ++arg_counter;
     ifstream fintops(argv[arg_counter]); //gtuniqtops.txt
-    ofstream finprobGT("probForEachGT.txt");
+    ofstream finprobGT("outRankGT.txt");
     Node ** arMrca = new Node * [N-1];
     int ** ar_rankns = new int * [N-1];
     for (int i = 0; i < N-1; ++i) ar_rankns[i] = new int [N-1];
