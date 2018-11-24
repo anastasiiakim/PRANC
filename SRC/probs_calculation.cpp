@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stack>
 #include <cmath>
+#include <algorithm>
 #include <iomanip> // output more decimals
 #define EPS 1e-8 // to check if a ST is ultrametric
 #define MAX_EXPONENT_VALUE 1024

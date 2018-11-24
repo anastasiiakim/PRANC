@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stack>
 #include <cmath>
+#include <algorithm>
 #include <vector>
 #include <iomanip> // to print more decimals
 #include "string_manipulations.h"
