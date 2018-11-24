@@ -35,12 +35,17 @@ All input files should be in the Newick format. All trees are treated as rooted 
 All files used below can be found in the *tests* folder. 
 ```
 ../ranked -rprob st_5taxon.txt rgt_5taxon.txt gtopos_5taxon.txt
+../ranked -uprob st_5taxon.txt unrgt_5taxon.txt 
 ```
-the output:
+Both options will give the following output:
 ```
 Total: 0.146615
 ```
-The program also outputs 
+STtopo.txt: 
+```
+ACD-2-BE-3-CD-4-
+```
+outRankGT.txt/outUnrGT.txt:
 ```
 0.0687959	BE-2-ACD-3-CD-4-
 0.0685643	ACD-2-BE-3-CD-4-
