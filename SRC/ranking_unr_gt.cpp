@@ -320,7 +320,7 @@ double searchOverRanks(Node * newnode, Node * newnodeGT, int Numtaxa, int ** ar_
         double probabilitytmp = getGeneTreeProb(Numtaxa, s, newnode, newnodeGT, ar_y, array_invcoal, arMrca, ar_rankns, k);
         probability += probabilitytmp;
 
-        file << getGTtopology(newnodeGT, Numtaxa) << " " << setprecision(15) << probabilitytmp << endl;
+        file << probabilitytmp << '\t' << getGTtopology(newnodeGT, Numtaxa) << endl;
     }        
     return probability;    
 }

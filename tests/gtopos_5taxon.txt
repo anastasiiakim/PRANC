@@ -1,0 +1,3 @@
+BE-2-ACD-3-CD-4- 
+ACD-2-BE-3-CD-4- 
+ACD-2-CD-3-BE-4- 
