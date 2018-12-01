@@ -1,5 +1,5 @@
 # Ranked-coal 
-can be used to compute probabilities of ranked or unranked phylogenetic gene tree topologies given a species tree under coalescent process.  
+can be used to compute the probabilities of ranked or unranked phylogenetic gene tree topologies given a species tree under the coalescent process.  
 
 ## Installation
 After downloading the source code, type
