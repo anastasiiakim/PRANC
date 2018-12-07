@@ -1,4 +1,4 @@
-# Ranked-coal 
+# rpCoal
 can be used to compute the probabilities of ranked or unranked phylogenetic gene tree topologies given a species tree under the coalescent process.  
 
 ## Installation
@@ -16,7 +16,7 @@ Program options:
 | -rprob        | <ul><li>input a species tree file</li><li>input a file containing ranked gene trees (with branch lengths)</li><li> input a file containing gene tree topologies (optional)</li></ul>|<ul><li>STtopo.txt</li><li>outRankGT.txt</li></ul>|
 | -uprob        | <ul><li>input a species tree file</li><li>input a file containing unranked gene trees (without branch lengths)</li></ul>| <ul><li>STtopo.txt</li><li>outUnrGT.txt</li></ul>|
 
-All input files should be in the Newick format. All trees are treated as rooted binary trees. We assume an ultrametric species tree (leaves of the tree are all equidistant from the root). User can run *ranked-coal* with either *-rprob* or *-uprob* option as shown below.  
+All input files should be in the Newick format. All trees are treated as rooted binary trees. We assume an ultrametric species tree (leaves of the tree are all equidistant from the root). User can run *rpCoal* with either *-rprob* or *-uprob* option as shown below.  
 
 ```
 ./ranked -rprob <species-tree-file-name> <ranked-gene-tree-file-name> <gene-tree-topology-file-name>
