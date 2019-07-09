@@ -20,23 +20,29 @@ Program options:
 All input files should be in the Newick format. All trees are treated as rooted binary trees. We assume an ultrametric species tree (leaves of the tree are all equidistant from the root). User can run *PRANC* with either *-rprob*, *-uprob*, or *-sym* option as shown below.  
 
 ```
-./ranked -rprob <species-tree-file-name> <ranked-gene-tree-file-name> <gene-tree-topology-file-name>
+./pranc -rprob <species-tree-file-name> <ranked-gene-tree-file-name> <gene-tree-topology-file-name>
 ```
 * ```<ranked-gene-tree-file-name>``` contains one or more gene trees with specified branch lengths in the Newick format. The taxon names of gene trees should match the taxon names of the corresponding species tree.   
 * ```<gene-tree-topology-file-name>``` (optional input file) contains corresponding gene tree topologies (see Examples). 
 * The program outputs a species tree topology in *STtopo.txt* and gene tree topologies (if input file is given) along with corresponding probabilities in *outRankGT.txt*.
   
 ```
-./ranked -uprob <species-tree-file-name> <unranked-gene-tree-file-name>
+./pranc -uprob <species-tree-file-name> <unranked-gene-tree-file-name>
 ```
-* ```<unranked-gene-tree-file-name>``` contains one unranked gene tree without branch lengths in the Newick format. The taxon names of gene trees should match the taxon names of the corresponding species tree. The program ranks an unranked tree and computes probabilities of corresponding ranked gene trees that share the same unranked topology.   
-* The program outputs a species tree topology in *STtopo.txt*, probabilties of unranked gene tree topologies along with unranked gene trees, and probabilities along with topologies in *outUnrGT.txt*.
+* ```<unranked-gene-tree-file-name>``` contains one or more gene trees with specified branch lengths in the Newick format. The taxon names of gene trees should match the taxon names of the corresponding species tree. The program ranks an unranked tree and computes probabilities of corresponding ranked gene trees that share the same unranked topology.   
+* The program outputs a species tree topology in *STtopo.txt*, probabilties of unranked gene tree topologies in *unrGT.txt*, and probabilities along with ranked topologies in *outUnrGT.txt*.
+
+```
+./pranc -sym <species-tree-file-name> <ranked-gene-tree-file-name>
+```
+* ```<ranked-gene-tree-file-name>``` contains one or more ranked gene trees with branch lengths in the Newick format. The taxon names of gene trees should match the taxon names of the corresponding species tree. The program ranks an unranked tree and computes probabilities of corresponding ranked gene trees that share the same unranked topology.   
+* The program outputs a species tree topology in *STtopo.txt*, probabilties of ranked histories in *hist_probs.txt*, and symbolic probabilities in *out_symbolic.txt*.
 
 ## Examples
 All files used below can be found in the *tests* folder. 
 ```
-../ranked -rprob st_5taxon.txt rgt_5taxon.txt gtopos_5taxon.txt
-../ranked -uprob st_5taxon.txt unrgt_5taxon.txt 
+../pranc -rprob st_5taxon.txt rgt_5taxon.txt gtopos_5taxon.txt
+../pranc -uprob st_5taxon.txt unrgt_5taxon.txt 
 ```
 Both options will give the following output:
 ```
