@@ -59,6 +59,7 @@ outRankGT.txt (probabilities and ranked topologies):
 ```
 
 
+
 ```
 ./pranc -rprob st_5taxon.txt rgt_5taxon.txt
 ```
