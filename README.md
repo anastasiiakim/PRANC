@@ -6,7 +6,7 @@ After downloading the source code, type
 ```
 make
 ```
-This will create an executable called ranked, which can be futher run with some input options listed below.
+This will create an executable called pranc, which can be futher run with some input options listed below.
 
 ## Usage
 Program options:
@@ -14,9 +14,10 @@ Program options:
 | Option        | Input files   | Output files                   |
 | ------------- |:-------------| :------------------------------|
 | -rprob        | <ul><li>input a species tree file</li><li>input a file containing ranked gene trees (with branch lengths)</li><li> input a file containing gene tree topologies (optional)</li></ul>|<ul><li>STtopo.txt</li><li>outRankGT.txt</li></ul>|
-| -uprob        | <ul><li>input a species tree file</li><li>input a file containing unranked gene trees (without branch lengths)</li></ul>| <ul><li>STtopo.txt</li><li>outUnrGT.txt</li></ul>|
+| -uprob        | <ul><li>input a species tree file</li><li>input a file containing unranked gene trees (without branch lengths)</li></ul>| <ul><li>STtopo.txt</li><li>outUnrGT.txt</li></ul><li>unrGT.txt</li></ul>|
+| -sym        | <ul><li>input a species tree file</li><li>input a file containing ranked gene trees (with branch lengths)</li></ul>| <ul><li>STtopo.txt</li><li>out_symbolic.txt</li></ul><li>hist_probs.txt</li></ul>|
 
-All input files should be in the Newick format. All trees are treated as rooted binary trees. We assume an ultrametric species tree (leaves of the tree are all equidistant from the root). User can run *PRANC* with either *-rprob* or *-uprob* option as shown below.  
+All input files should be in the Newick format. All trees are treated as rooted binary trees. We assume an ultrametric species tree (leaves of the tree are all equidistant from the root). User can run *PRANC* with either *-rprob*, *-uprob*, or *-sym* option as shown below.  
 
 ```
 ./ranked -rprob <species-tree-file-name> <ranked-gene-tree-file-name> <gene-tree-topology-file-name>
