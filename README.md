@@ -41,7 +41,7 @@ All input files should be in the Newick format. All trees are treated as rooted 
 ## Examples
 All input files used below can be found in the *tests* folder. 
 ```
-./pranc -rprob st_5taxon.txt rgt_5taxon.txt gtopos_5taxon.txt
+* ./pranc -rprob st_5taxon.txt rgt_5taxon.txt gtopos_5taxon.txt
 ```
 output:
 ```
