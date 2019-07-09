@@ -13,9 +13,9 @@ Program options:
 
 | Option        | Input files   | Output files                   |
 | ------------- |:-------------| :------------------------------|
-| -rprob        | <ul><li>input a species tree file</li><li>input a file containing ranked gene trees (with branch lengths)</li><li> input a file containing gene tree topologies (optional)</li></ul>|<ul><li>STtopo.txt</li><li>outRankGT.txt</li></ul>|
-| -uprob        | <ul><li>input a species tree file</li><li>input a file containing unranked gene trees (without branch lengths)</li></ul>| <ul><li>STtopo.txt</li><li>outUnrGT.txt</li><li>unrGT.txt</li></ul>|
-| -sym        | <ul><li>input a species tree file</li><li>input a file containing ranked gene trees (with branch lengths)</li></ul>| <ul><li>STtopo.txt</li><li>out_symbolic.txt</li><li>hist_probs.txt</li></ul>|
+| -rprob        | <ul><li>species tree file</li><li>file containing ranked gene trees (with branch lengths)</li><li> file containing gene tree topologies (optional)</li></ul>|<ul><li>STtopo.txt</li><li>outRankGT.txt</li></ul>|
+| -uprob        | <ul><li>species tree file</li><li>file containing unranked gene trees (without branch lengths)</li></ul>| <ul><li>STtopo.txt</li><li>outUnrGT.txt</li><li>unrGT.txt</li></ul>|
+| -sym        | <ul><li>species tree file</li><li>file containing ranked gene trees (with branch lengths)</li></ul>| <ul><li>STtopo.txt</li><li>out_symbolic.txt</li><li>hist_probs.txt</li></ul>|
 
 All input files should be in the Newick format. All trees are treated as rooted binary trees. We assume an ultrametric species tree (leaves of the tree are all equidistant from the root). User can run *PRANC* with either *-rprob*, *-uprob*, or *-sym* option as shown below.  
 
