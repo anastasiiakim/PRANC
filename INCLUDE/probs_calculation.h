@@ -5,11 +5,11 @@
 #include <iostream>
 #include <stack>
 #include <cmath>
-//#include <algorithm>
+#include <algorithm>
 
-void pushToArray (Node * p, int & tail, Node ** &ar);
-void pushToArrayNoSort (Node * p, int & tail, Node ** &ar);
-Node * popFromArray (int & tail, Node ** &ar);
+void pushToArray (Node * p, int & tail, Node ** ar);
+void pushToArrayNoSort (Node * p, int & tail, Node ** ar);
+Node * popFromArray (int & tail, Node ** ar);
 
 void distFromRoot (Node * p);
 void isUltrametric (Node * p, double & tempdist);
@@ -20,7 +20,7 @@ void deleteTree (Node * p);
 void deleteStack (std::stack <Node *> stk);
 
 void pushNodes (int & lbl, std::stack <Node *> & stk, std::string str);
-void getRanks(Node* newnode, int & tail, Node ** &ar);
+void getRanks(Node* newnode, int & tail, Node ** ar);
 Node * getNodeFromRank (Node * p, int rankValueGT);
 void getTaxa (Node * p, std::stack <Node *> & allTaxa);
 
@@ -67,8 +67,8 @@ double getGeneTreeProb(int N, double * s,  Node * newnode, Node * newnodeGT, int
 
 
 int getNumberOfTaxa(int & arg_counter, char* argv[], Node* &newnode);
-void speciesTreeProcessing(Node* newnode, int & N, double* s, int** ar_y);
-void calcRankedProb(int & arg_counter, char* argv[], int & N, Node * newnode, double* s, int** ar_y);
+void speciesTreeProcessing(Node* newnode, int & N, double* s_times, double* s, int** ar_y);
+double calcRankedProb(int & arg_counter, char* argv[], int & N, Node * newnode, double* s, int** ar_y);
 void calcProbsRankedGtInput(int &  arg_counter, char* argv[]);
 
 

@@ -40,6 +40,7 @@ void Queue::arrange()
     }
 }
 
+
 void Queue::push (Node * p)
 {
     data[tail] = p;

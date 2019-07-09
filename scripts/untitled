@@ -1,0 +1,62 @@
+#!/bin/bash
+
+
+OUTPUT=/dev/null
+
+
+# Inputs for this run:
+NumTaxa=$1
+BDlambda=$2
+BDmu=$3
+NumIter=$4
+
+#echo "Starting run on $(date), Job number: $PBS_JOBID on host $(hostname)"
+echo "NumTaxa=$NumTaxa"
+echo "BDlambda=$BDlambda"
+echo "BDmu=$BDmu"
+echo "NumIter=$NumIter"
+
+
+EXE_DIR="./"
+TEST_DIR="../tests"
+SCRATCHDIR=scratch-${NumTaxa}_${BDlambda}_${BDmu}_${NumIter} #_$(echo $PBS_JOBID | cut -d"." -f1)
+mkdir ./$SCRATCHDIR
+
+# copy files to the SCRATCHDIR folder to write output files there
+cp R_sort.r $SCRATCHDIR
+cp $TEST_DIR/all_trees_6taxon.txt $SCRATCHDIR
+cp $TEST_DIR/all_tops_6taxon.txt $SCRATCHDIR
+cp $TEST_DIR/ST_${NumTaxa}_${BDlambda}_${BDmu}.txt $SCRATCHDIR
+
+
+cd $SCRATCHDIR
+
+filename="ST_${NumTaxa}_${BDlambda}_${BDmu}.txt"
+
+
+while read line;
+do
+        echo "$line" > ST.txt
+
+        $EXE_DIR/pranc -rprob ST.txt all_trees_6taxon.txt all_tops_6taxon.txt
+
+done < $filename
+
+
+# Collect results
+RESULTDIR=${NumTaxa}_${BDlambda}_${BDmu}_${NumIter}-results
+mkdir ../$RESULTDIR
+cp count_binom.txt anom_spts.txt ../$RESULTDIR
+
+
+# Make sure results where saved, otherwise do not delete scratch dir.
+if [[ "$?" -ne 0 ]]; then
+    echo "Could not copy results to results directory: $RESULTDIR" >&2
+    exit "Leaving Scratch directory in place here: $(pwd)"
+fi
+
+cd ../
+
+rm -r $SCRATCHDIR
+
+exit 0
