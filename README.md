@@ -39,12 +39,11 @@ All input files should be in the Newick format. All trees are treated as rooted 
 * The program outputs a species tree topology in *STtopo.txt*, probabilties of ranked histories in *hist_probs.txt*, and symbolic probabilities in *out_symbolic.txt*.
 
 ## Examples
-All files used below can be found in the *tests* folder. 
+All input files used below can be found in the *tests* folder. 
 ```
-../pranc -rprob st_5taxon.txt rgt_5taxon.txt gtopos_5taxon.txt
-../pranc -uprob st_5taxon.txt unrgt_5taxon.txt 
+./pranc -rprob st_5taxon.txt rgt_5taxon.txt gtopos_5taxon.txt
 ```
-Both options will give the following output:
+output:
 ```
 Total: 0.146615
 ```
@@ -52,25 +51,44 @@ STtopo.txt:
 ```
 ACD-2-BE-3-CD-4-
 ```
-outRankGT.txt/outUnrGT.txt:
+outRankGT.txt (probability and ranked topology):
 ```
 0.0687959	BE-2-ACD-3-CD-4-
 0.0685643	ACD-2-BE-3-CD-4-
 0.00925435	ACD-2-CD-3-BE-4-
 ```
-unrGT.txt
+
+
+```
+./pranc -uprob st_5taxon.txt unrgt_5taxon.txt 
+```
+output:
+```
+Total: 0.146615
+```
+STtopo.txt: 
+```
+ACD-2-BE-3-CD-4-
+```
+outUnrGT.txt (probability and ranked topology):
+```
+0.0687959	BE-2-ACD-3-CD-4-
+0.0685643	ACD-2-BE-3-CD-4-
+0.00925435	ACD-2-CD-3-BE-4-
+```
+unrGT.txt (unranked tree and probability):
 ```
 ((B,E),(A,(C,D)));	0.146615
 ```
 
-```
-../pranc -sym st_5taxon.txt gt_5taxon.txt 
-```
 
+```
+./pranc -sym st_5taxon.txt gt_5taxon.txt 
+```
 ```
 Total: 0.0687959
 ```
-
+hist_probs.txt (ranked history and probability):
 ```
 1234	0.000118525
 1233	7.12235e-08
@@ -78,7 +96,7 @@ Total: 0.0687959
 1112	0.00373918
 1111	0.000909714
 ```
-
+out_symbolic.txt (first block shows the probability of the ranked history *1234*, second block shows the probability of the ranked history *1233*, etc.)
 ```
  + (exp(-0*(s1-s2))*1/(1) + exp(-1*(s1-s2))*1/(-1))  * 
 (exp(-0*(s2-s3))*1/(1) + exp(-1*(s2-s3))*1/(-1))  * 
@@ -89,4 +107,5 @@ Total: 0.0687959
 (exp(-0*(s2-s3))*1/(2) + exp(-1*(s2-s3))*1/(-1) + exp(-2*(s2-s3))*1/(2))  * 
 (exp(-1*(s3-s4))*1/(1))  * 
 2/2
+...
 ```
