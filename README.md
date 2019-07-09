@@ -29,13 +29,13 @@ All input files should be in the Newick format. All trees are treated as rooted 
 ```
 ./pranc -uprob <species-tree-file-name> <unranked-gene-tree-file-name>
 ```
-* ```<unranked-gene-tree-file-name>``` contains one or more unranked gene trees in the Newick format. The program ranks an unranked tree and computes probabilities of corresponding ranked gene trees that share the same unranked topology.   
-* The program outputs a species tree topology (*STtopo.txt*), probabilties of unranked gene tree topologies (*unrGT.txt*), and probabilities of ranked topologies (*outUnrGT.txt*).
+* ```<unranked-gene-tree-file-name>``` contains one or more unranked gene trees in the Newick format.   
+* The program ranks an unranked tree and computes probabilities of corresponding ranked gene trees that share the same unranked topology. It outputs a species tree topology (*STtopo.txt*), probabilties of unranked gene tree topologies (*unrGT.txt*), and probabilities of ranked topologies (*outUnrGT.txt*).
 
 ```
 ./pranc -sym <species-tree-file-name> <ranked-gene-tree-file-name>
 ```
-* ```<ranked-gene-tree-file-name>``` contains one or more ranked gene trees in the Newick format. The program ranks an unranked tree and computes probabilities of corresponding ranked gene trees that share the same unranked topology.   
+* ```<ranked-gene-tree-file-name>``` contains one or more ranked gene trees in the Newick format. 
 * The program outputs a species tree topology (*STtopo.txt*), probabilties of ranked histories (*hist_probs.txt*), and symbolic probabilities (*out_symbolic.txt*).
 
 ## Examples
