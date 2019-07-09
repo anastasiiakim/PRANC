@@ -24,13 +24,13 @@ All input files should be in the Newick format. All trees are treated as rooted 
 ```
 * ```<ranked-gene-tree-file-name>``` contains one or more gene trees with specified branch lengths in the Newick format. The taxon names of gene trees should match the taxon names of the corresponding species tree.   
 * ```<gene-tree-topology-file-name>``` (optional input file) contains corresponding gene tree topologies (see Examples). 
-* The program outputs a species tree topology in *STtopo.txt* and gene tree topologies along with corresponding probabilities (if input file is given) in *outRankGT.txt*.
+* The program outputs a species tree topology in *STtopo.txt* and gene tree topologies (if input file is given) along with corresponding probabilities in *outRankGT.txt*.
   
 ```
 ./ranked -uprob <species-tree-file-name> <unranked-gene-tree-file-name>
 ```
 * ```<unranked-gene-tree-file-name>``` contains one unranked gene tree without branch lengths in the Newick format. The taxon names of gene trees should match the taxon names of the corresponding species tree. The program ranks an unranked tree and computes probabilities of corresponding ranked gene trees that share the same unranked topology.   
-* The program outputs a species tree topology in *STtopo.txt* and probabilities along with topologies in *outUnrGT.txt*.
+* The program outputs a species tree topology in *STtopo.txt*, probabilties of unranked gene tree topologies along with unranked gene trees, and probabilities along with topologies in *outUnrGT.txt*.
 
 ## Examples
 All files used below can be found in the *tests* folder. 
