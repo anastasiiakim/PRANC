@@ -6,7 +6,7 @@ After downloading the source code, type
 ```
 make
 ```
-This will create an executable called pranc, which can be futher run with some input options listed below.
+This will create an executable called pranc, which can be run with some input options listed below.
 
 ## Usage
 Program options:
