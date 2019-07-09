@@ -41,7 +41,7 @@ All input files should be in the Newick format. All trees are treated as rooted 
 ## Examples
 All input files used below can be found in the *tests* folder. 
 
-# Example 1
+## Example 1
 ```
 ./pranc -rprob st_5taxon.txt rgt_5taxon.txt gtopos_5taxon.txt
 ```
@@ -60,7 +60,7 @@ outRankGT.txt (probabilities and ranked topologies):
 0.00925435	ACD-2-CD-3-BE-4-
 ```
 
-# Example 2
+#### Example 2
 ```
 ./pranc -rprob st_5taxon.txt rgt_5taxon.txt
 ```
@@ -102,7 +102,7 @@ unrGT.txt (unranked tree and probability):
 ((B,E),(A,(C,D)));	0.146615
 ```
 
-# Example 4
+### Example 4
 ```
 ./pranc -sym st_5taxon.txt gt_5taxon.txt 
 ```
