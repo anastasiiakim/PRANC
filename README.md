@@ -24,7 +24,7 @@ All input files should be in the Newick format. All trees are treated as rooted 
 ```
 * ```<ranked-gene-tree-file-name>``` contains one or more gene trees with specified branch lengths in the Newick format. The taxon names of gene trees should match the taxon names of the corresponding species tree.   
 * ```<gene-tree-topology-file-name>``` (optional input file) contains corresponding gene tree topologies (see Examples). 
-* The program outputs a species tree topology in *STtopo.txt* and gene tree topologies (if input file is given) along with corresponding probabilities in *outRankGT.txt*.
+* The program outputs a species tree topology (*STtopo.txt*) and probabilities of the gene tree topologies (*outRankGT.txt*).
   
 ```
 ./pranc -uprob <species-tree-file-name> <unranked-gene-tree-file-name>
