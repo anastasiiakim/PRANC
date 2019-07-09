@@ -24,19 +24,19 @@ All input files should be in the Newick format. All trees are treated as rooted 
 ```
 * ```<ranked-gene-tree-file-name>``` contains one or more gene trees with specified branch lengths in the Newick format. The taxon names of gene trees should match the taxon names of the corresponding species tree.   
 * ```<gene-tree-topology-file-name>``` (optional input file) contains corresponding gene tree topologies (see Examples). 
-* The program outputs a species tree topology (*STtopo.txt*) and probabilities of the gene tree topologies (*outRankGT.txt*).
+* The program outputs a species tree topology (*STtopo.txt*) and probabilities of ranked gene tree topologies (*outRankGT.txt*).
   
 ```
 ./pranc -uprob <species-tree-file-name> <unranked-gene-tree-file-name>
 ```
 * ```<unranked-gene-tree-file-name>``` contains one or more gene trees with specified branch lengths in the Newick format. The taxon names of gene trees should match the taxon names of the corresponding species tree. The program ranks an unranked tree and computes probabilities of corresponding ranked gene trees that share the same unranked topology.   
-* The program outputs a species tree topology in *STtopo.txt*, probabilties of unranked gene tree topologies in *unrGT.txt*, and probabilities along with ranked topologies in *outUnrGT.txt*.
+* The program outputs a species tree topology (*STtopo.txt*), probabilties of unranked gene tree topologies (*unrGT.txt*), and probabilities of ranked topologies (*outUnrGT.txt*).
 
 ```
 ./pranc -sym <species-tree-file-name> <ranked-gene-tree-file-name>
 ```
 * ```<ranked-gene-tree-file-name>``` contains one or more ranked gene trees with branch lengths in the Newick format. The taxon names of gene trees should match the taxon names of the corresponding species tree. The program ranks an unranked tree and computes probabilities of corresponding ranked gene trees that share the same unranked topology.   
-* The program outputs a species tree topology in *STtopo.txt*, probabilties of ranked histories in *hist_probs.txt*, and symbolic probabilities in *out_symbolic.txt*.
+* The program outputs a species tree topology (*STtopo.txt*), probabilties of ranked histories (*hist_probs.txt*), and symbolic probabilities (*out_symbolic.txt*).
 
 ## Examples
 All input files used below can be found in the *tests* folder. 
@@ -51,11 +51,30 @@ STtopo.txt:
 ```
 ACD-2-BE-3-CD-4-
 ```
-outRankGT.txt (probability and ranked topology):
+outRankGT.txt (probabilities and ranked topologies):
 ```
 0.0687959	BE-2-ACD-3-CD-4-
 0.0685643	ACD-2-BE-3-CD-4-
 0.00925435	ACD-2-CD-3-BE-4-
+```
+
+
+```
+./pranc -rprob st_5taxon.txt rgt_5taxon.txt
+```
+output:
+```
+Total: 0.146615
+```
+STtopo.txt: 
+```
+ACD-2-BE-3-CD-4-
+```
+outRankGT.txt (probabilities):
+```
+0.0687959	
+0.0685643	
+0.00925435	
 ```
 
 
@@ -70,7 +89,7 @@ STtopo.txt:
 ```
 ACD-2-BE-3-CD-4-
 ```
-outUnrGT.txt (probability and ranked topology):
+outUnrGT.txt (probabilities and ranked topologies):
 ```
 0.0687959	BE-2-ACD-3-CD-4-
 0.0685643	ACD-2-BE-3-CD-4-
@@ -88,7 +107,7 @@ unrGT.txt (unranked tree and probability):
 ```
 Total: 0.0687959
 ```
-hist_probs.txt (ranked history and probability):
+hist_probs.txt (ranked histories and probabilities):
 ```
 1234	0.000118525
 1233	7.12235e-08
