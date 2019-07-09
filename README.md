@@ -105,6 +105,7 @@ unrGT.txt (unranked tree and probability):
 ```
 ./pranc -sym st_5taxon.txt gt_5taxon.txt 
 ```
+output:
 ```
 Total: 0.0687959
 ```
