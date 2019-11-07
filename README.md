@@ -1,5 +1,5 @@
 # PRANC
-can be used to compute the probabilities of ranked or unranked phylogenetic gene tree topologies given a species tree under the coalescent process. It can also output "democratic vote" ranked or unranked topologies.  
+can be used to compute the probabilities of ranked or unranked phylogenetic gene tree topologies given a species tree under the coalescent process. It can also output "democratic vote" (most frequent) ranked or unranked topologies.  
 
 ## Installation
 After downloading the source code, go to BIN directory and type
