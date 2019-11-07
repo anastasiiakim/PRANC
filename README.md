@@ -44,7 +44,7 @@ All input files should be in the Newick format. All trees are treated as rooted 
 ./pranc -rtopo <ranked-tree-file-name>
 ```
 * ```<ranked-tree-file-name>``` contains one or more ranked trees in the Newick format. 
-* The program outputs ranked tree topologies (*rtopos.txt*) and frequencies of the topologies (*rfreqs.txt*). Species names are separated by "|" character, and groups of clades separated by "-" character followed by rank.
+* The program outputs ranked tree topologies (*rtopos.txt*) and frequencies of the topologies (*rfreqs.txt*). Species names are separated by "|" character, and groups of clades separated by "-" character followed by clade's rank.
 ```
 ./pranc -utopo <unranked-tree-file-name>
 ```
