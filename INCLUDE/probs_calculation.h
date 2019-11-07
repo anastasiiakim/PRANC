@@ -6,10 +6,12 @@
 #include <stack>
 #include <cmath>
 #include <algorithm>
+#include <node.h>
 
 void pushToArray (Node * p, int & tail, Node ** ar);
 void pushToArrayNoSort (Node * p, int & tail, Node ** ar);
 Node * popFromArray (int & tail, Node ** ar);
+
 
 void distFromRoot (Node * p);
 void isUltrametric (Node * p, double & tempdist);

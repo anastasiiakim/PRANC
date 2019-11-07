@@ -16,6 +16,8 @@
 #include "write_ranked_tree.h"
 #include "maxlike.h"
 #include "symbolic.h"
+#include "get_unranked_topology.h"
+#include "get_ranked_topology.h"
 
 using namespace std;
 
@@ -61,12 +63,17 @@ int main(int argc, char * argv[])
             ++arg_counter;
             rankUnrTrees(arg_counter, argv);
         }
-        else if(strcmp(argv[arg_counter],"-sym") == 0)
+        else if(strcmp(argv[arg_counter],"-utopo") == 0)
         {
             ++arg_counter;
-            symbolicProbsRankedGtInput(arg_counter, argv);
+            outputUnrankedTopology(arg_counter, argv);
         }
-   
+        else if(strcmp(argv[arg_counter],"-rtopo") == 0)
+        {
+            ++arg_counter;
+            outputRankedTopology(arg_counter, argv);
+        }
+  
         else return 0;
     }
     return 0;

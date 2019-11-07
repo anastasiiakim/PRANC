@@ -346,7 +346,7 @@ void calcUnrankedProb(int & arg_counter, char * argv[], int & N, Node* newnode, 
     int * ranks = new int[N-2];
     while(getline(finGT, strGT, '\n'))
     {
-        if(strGT.size() < 3) break;
+      if(strGT.size() < 3) break;
         count = 0;
         topcounter = 1;
         prod = 1;
@@ -361,7 +361,7 @@ void calcUnrankedProb(int & arg_counter, char * argv[], int & N, Node* newnode, 
         newnodeGT = stkGTunr.top();
         getDescTaxa(newnodeGT, N);
         newnodeGT -> rank = 1;
-
+        cout << "U" << endl;
         oneGTPr = searchOverRanks(newnode, newnodeGT, N, ar_y, s, outGT, array_invcoal, arMrca, ar_rankns, k);
         outUnr << strGT << '\t' << oneGTPr << endl;
         TOTAL_PROBABILITY += oneGTPr;

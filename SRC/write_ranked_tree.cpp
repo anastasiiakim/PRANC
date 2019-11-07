@@ -115,7 +115,7 @@ void rankUnrTrees(int & arg_counter, char * argv[])
 		newnode -> rank = 1;
 
 		int prod = 1;
-	  str = "";
+	    str = "";
 		int temp = 0;
 		int tops_count = numberOfRankings(newnode, N, prod);
 		vector<vector<int>> seq = permuteRanks(newnode);

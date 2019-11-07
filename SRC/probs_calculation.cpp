@@ -143,7 +143,6 @@ void deleteStack (std::stack <Node *> stk)
 
 
 
-
 void pushNodes (int & lbl, std::stack <Node *> & stk, std::string str)
 {
   int i = 0;
@@ -218,6 +217,7 @@ void getRanks(Node* newnode, int & tail, Node ** ar)
 
       //    cout << "Warning: some ranks are tied. Rand assignment was applied" << endl;
       k--;
+      srand(5);
       x = rand()%(k1-k+1)+k;
       tempnode -> rank = x;
       if(x == k) ar[tail-1] -> rank = k1;
@@ -949,10 +949,9 @@ void speciesTreeProcessing(Node* newnode, int & N, double* s_times, double * s, 
   saveDistFrRoot(newnode, arDistFrRoot, itemp);
   //printIsUltrametric(arDistFrRoot, N);
 
-  //  next 3 lines output species tree topology 
-      ofstream stfile("STtopo.txt");
-      writeRankedTreeTopology(newnode, N, stfile);
-      stfile.close();
+  //    ofstream stfile("STtopo.txt");
+  //    writeRankedTreeTopology(newnode, N, stfile);
+  //    stfile.close();
 
   size_t maxQue = (size_t) N*(1+N)/2;
   makeBeadedTree(newnode, maxQue);
@@ -972,7 +971,7 @@ double calcRankedProb(int & arg_counter, char* argv[], int & N, Node * newnode, 
   ifstream finGT(argv[arg_counter]); //gtuniqtrees.txt
   ++arg_counter;
   ifstream fintops(argv[arg_counter]); //gtuniqtops.txt
-  ofstream finprobGT("outRankGT.txt");
+  ofstream finprobGT("probForEachGT.txt");
   Node ** arMrca = new Node * [N-1];
   int ** ar_rankns = new int * [N-1];
   for (int i = 0; i < N-1; i++) ar_rankns[i] = new int [N-1];
@@ -1083,7 +1082,6 @@ void calcProbsRankedGtInput(int &  arg_counter, char* argv[])
   delete[] s_times;
   delete[] s;
   deleteTree(newnode);
-  newnode = NULL;
 }
 
 
