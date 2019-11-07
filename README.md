@@ -45,7 +45,6 @@ All input files should be in the Newick format. All trees are treated as rooted 
 ```
 * ```<ranked-tree-file-name>``` contains one or more ranked trees in the Newick format. 
 * The program outputs ranked tree topologies (*rtopos.txt*) and frequencies of the topologies (*rfreqs.txt*).
-
 ```
 ./pranc -utopo <unranked-tree-file-name>
 ```
@@ -160,12 +159,14 @@ rtopos.txt:
 t1|t2|t3|t4|-2-t1|t3|t4|-3-t1|t4|-4-
 t1|t2|t5|-2-t3|t4|-3-t1|t2|-4-
 t1|t2|t5|-2-t3|t4|-3-t1|t2|-4-
-t1|t3|t4|-2-t1|t3|-3-t2|t5|-4-
+t2|t3|t4|t5|-2-t2|t5|-3-t3|t4|-4-
+t2|t3|t4|t5|-2-t3|t4|-3-t2|t5|-4-
 ```
 rfreqs.txt: 
 ```
 2	t1|t2|t5|-2-t3|t4|-3-t1|t2|-4-
-1	t1|t3|t4|-2-t1|t3|-3-t2|t5|-4-
+1	t2|t3|t4|t5|-2-t3|t4|-3-t2|t5|-4-
+1	t2|t3|t4|t5|-2-t2|t5|-3-t3|t4|-4-
 1	t1|t2|t3|t4|-2-t1|t3|t4|-3-t1|t4|-4-
 ```
 
@@ -181,12 +182,13 @@ utopos.txt:
 t1|t4|-t1|t3|t4|-t1|t2|t3|t4|-t1|t2|t3|t4|t5|-
 t1|t2|-t3|t4|-t1|t2|t5|-t1|t2|t3|t4|t5|-
 t1|t2|-t3|t4|-t1|t2|t5|-t1|t2|t3|t4|t5|-
-t1|t3|-t2|t5|-t1|t3|t4|-t1|t2|t3|t4|t5|-
+t2|t5|-t3|t4|-t2|t3|t4|t5|-t1|t2|t3|t4|t5|-
+t2|t5|-t3|t4|-t2|t3|t4|t5|-t1|t2|t3|t4|t5|-
 ```
 ufreqs.txt: 
 ```
+2	t2|t5|-t3|t4|-t2|t3|t4|t5|-t1|t2|t3|t4|t5|-
 2	t1|t2|-t3|t4|-t1|t2|t5|-t1|t2|t3|t4|t5|-
-1	t1|t3|-t2|t5|-t1|t3|t4|-t1|t2|t3|t4|t5|-
 1	t1|t4|-t1|t3|t4|-t1|t2|t3|t4|-t1|t2|t3|t4|t5|-
 ```
 
@@ -200,21 +202,18 @@ output:
 
 utopos.txt:
 ```
-t3|t5|-t4|t7|-t6|t8|-t1|t3|t5|-t2|t4|t7|-t1|t3|t5|t6|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
 t3|t4|-t6|t7|-t1|t6|t7|-t3|t4|t5|-t1|t6|t7|t8|-t1|t2|t6|t7|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
 t1|t2|-t3|t4|-t7|t8|-t1|t2|t6|-t5|t7|t8|-t3|t4|t5|t7|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
 t1|t2|-t3|t4|-t7|t8|-t1|t2|t6|-t5|t7|t8|-t3|t4|t5|t7|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
-t5|t6|-t7|t8|-t1|t7|t8|-t3|t5|t6|-t1|t2|t7|t8|-t3|t4|t5|t6|-t1|t2|t3|t4|t5|t6|t7|t8|-
+t1|t2|-t3|t4|-t7|t8|-t1|t2|t6|-t5|t7|t8|-t3|t4|t5|t7|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
 t1|t2|-t7|t8|-t1|t2|t3|-t6|t7|t8|-t1|t2|t3|t4|-t5|t6|t7|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
 t1|t2|-t3|t4|-t5|t6|-t7|t8|-t5|t6|t7|t8|-t3|t4|t5|t6|t7|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
-t1|t2|-t3|t4|-t5|t6|-t7|t8|-t5|t6|t7|t8|-t3|t4|t5|t6|t7|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
+t3|t4|-t6|t7|-t1|t6|t7|-t3|t4|t5|-t1|t6|t7|t8|-t1|t2|t6|t7|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
 ```
 ufreqs.txt: 
 ```
-2	t1|t2|-t3|t4|-t5|t6|-t7|t8|-t5|t6|t7|t8|-t3|t4|t5|t6|t7|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
-2	t1|t2|-t3|t4|-t7|t8|-t1|t2|t6|-t5|t7|t8|-t3|t4|t5|t7|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
-1	t5|t6|-t7|t8|-t1|t7|t8|-t3|t5|t6|-t1|t2|t7|t8|-t3|t4|t5|t6|-t1|t2|t3|t4|t5|t6|t7|t8|-
-1	t3|t5|-t4|t7|-t6|t8|-t1|t3|t5|-t2|t4|t7|-t1|t3|t5|t6|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
-1	t3|t4|-t6|t7|-t1|t6|t7|-t3|t4|t5|-t1|t6|t7|t8|-t1|t2|t6|t7|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
+3	t1|t2|-t3|t4|-t7|t8|-t1|t2|t6|-t5|t7|t8|-t3|t4|t5|t7|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
+2	t3|t4|-t6|t7|-t1|t6|t7|-t3|t4|t5|-t1|t6|t7|t8|-t1|t2|t6|t7|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
 1	t1|t2|-t7|t8|-t1|t2|t3|-t6|t7|t8|-t1|t2|t3|t4|-t5|t6|t7|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
+1	t1|t2|-t3|t4|-t5|t6|-t7|t8|-t5|t6|t7|t8|-t3|t4|t5|t6|t7|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
 ```
