@@ -16,8 +16,8 @@ Program options:
 | -rprob        | <ul><li>species tree file</li><li>file containing ranked gene trees (with branch lengths)</li><li> file containing gene tree topologies (optional)</li></ul>|<ul><li>STtopo.txt</li><li>outRankGT.txt</li></ul>|
 | -uprob        | <ul><li>species tree file</li><li>file containing unranked gene trees (without branch lengths)</li></ul>| <ul><li>STtopo.txt</li><li>outUnrGT.txt</li><li>unrGT.txt</li></ul>|
 | -sym        | <ul><li>species tree file</li><li>file containing ranked gene trees (with branch lengths)</li></ul>| <ul><li>STtopo.txt</li><li>out_symbolic.txt</li><li>hist_probs.txt</li></ul>|
-| -rtopo        | <li>file containing ranked trees (with branch lengths specified)</li></ul>|
-| -utopo        | <li>file containing unranked trees (with or without branch lengths specified)</li></ul>|
+| -rtopo        | <li>file containing ranked trees (with branch lengths specified)</li></ul>| <ul><li>rtopos.txt</li><li>rfreqs.txt</li></ul>|
+| -utopo        | <li>file containing unranked trees (with or without branch lengths specified)</li></ul>| <ul><li>utopos.txt</li><li>ufreqs.txt</li></ul>|
 
 All input files should be in the Newick format. All trees are treated as rooted binary trees. We assume an ultrametric species tree (leaves of the tree are all equidistant from the root). The taxon names of gene trees should match the taxon names of the corresponding species tree. User can run *PRANC* with either *-rprob*, *-uprob*, *-sym*, *-rtopo*, or *-utopo* option as shown below.  
 
@@ -43,13 +43,13 @@ All input files should be in the Newick format. All trees are treated as rooted 
 ```
 ./pranc -rtopo <ranked-tree-file-name>
 ```
-* ```<ranked-gene-tree-file-name>``` contains one or more ranked gene trees in the Newick format. 
+* ```<ranked-tree-file-name>``` contains one or more ranked trees in the Newick format. 
 * The program outputs ranked tree topologies (*rtopos.txt*) and frequencies of the topologies (*rfreqs.txt*).
 
 ```
 ./pranc -utopo <unranked-tree-file-name>
 ```
-* ```<unranked-gene-tree-file-name>``` contains one or more unranked gene trees in the Newick format. 
+* ```<unranked-tree-file-name>``` contains one or more unranked trees in the Newick format. 
 * The program outputs unranked tree topologies (*utopos.txt*) and frequencies of the topologies (*ufreqs.txt*).
 
 
