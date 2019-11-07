@@ -152,9 +152,9 @@ out_symbolic.txt (first block shows the probability of the ranked history *1234*
 ```
 ./pranc -rtopo 5taxa_trees.txt
 ```
-```
+
 output:
-```
+
 rtopos.txt:
 ```
 t1|t2|t3|t4|-2-t1|t3|t4|-3-t1|t4|-4-
@@ -195,9 +195,9 @@ ufreqs.txt:
 ```
 ./pranc -utopo unrgts.txt
 ```
-```
+
 output:
-```
+
 utopos.txt:
 ```
 t3|t5|-t4|t7|-t6|t8|-t1|t3|t5|-t2|t4|t7|-t1|t3|t5|t6|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
