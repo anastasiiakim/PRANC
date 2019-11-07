@@ -174,9 +174,8 @@ rfreqs.txt:
 ```
 ./pranc -utopo 5taxa_trees.txt
 ```
-```
 output:
-```
+
 utopos.txt:
 ```
 t1|t4|-t1|t3|t4|-t1|t2|t3|t4|-t1|t2|t3|t4|t5|-
