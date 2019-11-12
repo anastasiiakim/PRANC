@@ -16,25 +16,36 @@
 
 using namespace std;
 
+
 void pushNodesUnrankedGT(int & lbl, std::stack <Node *> & stk, string & str, string * strlbl)
 {
     int i = 0;
     int j = 0;
+    int indicator = 0;
     while(i < (int) str.size())
     {
-        if((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z'))
+
+        if(((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z')) && ((i+1) < (int) str.size()) && (str[i+1] != '-' && str[i+1] != '+'))
         {
             std::string strtemp;
             strtemp += str[i];
             while(((i+1) < (int) str.size()) && str[i+1] != '(' && str[i+1] != ',' && str[i+1] != ')')
             {
                 strtemp += str[i+1];
-                ++i;
+                ++i; 
+                if(str[i+1] == ':')
+                {
+                    while((i+2) < (int) str.size() && str[i+2] != ',' && str[i+2] != ')')
+                    { 
+                        ++i;
+                    }
+                    indicator++;
+                }
+                if(indicator != 0) ++i;
             }
             Node * newnode = new Node();
             newnode -> label = strtemp;
             ++lbl;
-
             stk.push(newnode);
         }
 
@@ -64,9 +75,59 @@ void pushNodesUnrankedGT(int & lbl, std::stack <Node *> & stk, string & str, str
         }
         ++i;
     }
-
 }
+/*
+   void pushNodesUnrankedGT(int & lbl, std::stack <Node *> & stk, string & str, string * strlbl)
+   {
+   int i = 0;
+   int j = 0;
+   while(i < (int) str.size())
+   {
+   if((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z'))
+   {
+   std::string strtemp;
+   strtemp += str[i];
+   while(((i+1) < (int) str.size()) && str[i+1] != '(' && str[i+1] != ',' && str[i+1] != ')')
+   {
+   strtemp += str[i+1];
+   ++i;
+   }
+   Node * newnode = new Node();
+   newnode -> label = strtemp;
+   ++lbl;
 
+   stk.push(newnode);
+   }
+
+   else if (str[i] == ')')
+   {
+   Node * newnode = new Node();
+   newnode -> right = stk.top();
+   newnode -> right -> parent = newnode;
+   newnode -> right -> isRight = 1;
+   stk.pop();
+   newnode -> left = stk.top();
+   newnode -> left -> parent = newnode;
+   newnode -> left -> isRight = 0;
+   stk.pop();
+
+   stack <Node *> allTaxa;
+   getTaxa(newnode, allTaxa);
+   string temp;
+   while(!allTaxa.empty())
+   {
+   temp += allTaxa.top() -> label;
+   allTaxa.pop();
+   }
+   strlbl[j] = temp;
+   ++j;
+   stk.push(newnode);
+   }
+   ++i;
+   }
+
+   }
+   */
 void searchTreeForRanks(Node * p, int & nrank, int * ranks, int & i)
 {
     if(p -> label.size() == 0)
@@ -154,50 +215,50 @@ int numberOfRankings(Node * newnodeGT, int NumTaxa, int prod)
 }
 
 /*
-int generateAllRanksPermutations(Node * newnode, Node * newnodeGT, int & j, int n, int N, int Numtaxa, int * ranks, string * strlbl, int ** ar_y, double * s, double & probability, int & topscounter, const int tops_count, string & temp_str, string strGT,  ofstream & file, double * array_invcoal, Node ** arMrca, int ** ar_rankns, int *** k)
-{
-    int ret = 2;
-    if(n == 1)
-    {
-        int icounter = 0;
-        int dummy = 0;
+   int generateAllRanksPermutations(Node * newnode, Node * newnodeGT, int & j, int n, int N, int Numtaxa, int * ranks, string * strlbl, int ** ar_y, double * s, double & probability, int & topscounter, const int tops_count, string & temp_str, string strGT,  ofstream & file, double * array_invcoal, Node ** arMrca, int ** ar_rankns, int *** k)
+   {
+   int ret = 2;
+   if(n == 1)
+   {
+   int icounter = 0;
+   int dummy = 0;
 
-        searchTreeForRanks(newnodeGT, dummy, ranks, icounter);
-        if (icounter == N)
-        {
-            double probabilitytmp = getGeneTreeProb(Numtaxa, s, newnode, newnodeGT, ar_y, array_invcoal, arMrca, ar_rankns, k);
-            probability += probabilitytmp;
+   searchTreeForRanks(newnodeGT, dummy, ranks, icounter);
+   if (icounter == N)
+   {
+   double probabilitytmp = getGeneTreeProb(Numtaxa, s, newnode, newnodeGT, ar_y, array_invcoal, arMrca, ar_rankns, k);
+   probability += probabilitytmp;
 
-            file << temp_str << " " << setprecision(15) << probabilitytmp << endl;
+   file << temp_str << " " << setprecision(15) << probabilitytmp << endl;
 
-            ++j;
+   ++j;
 
-            for(int irank = 2; irank < Numtaxa; ++irank)
-            {
-                Node * tempnode = getNodeFromRank(newnodeGT, irank);
-            }
+   for(int irank = 2; irank < Numtaxa; ++irank)
+   {
+   Node * tempnode = getNodeFromRank(newnodeGT, irank);
+   }
 
-            if (topscounter > tops_count) return 3;
+   if (topscounter > tops_count) return 3;
 
-        }
-    }
-    else
-    {
-        for(int i = 0; i < n - 1; ++i)
-        {
-            ret = generateAllRanksPermutations(newnode, newnodeGT, j, n-1, N, Numtaxa, ranks, strlbl, ar_y, s, probability,  topscounter, tops_count, temp_str, strGT, file, array_invcoal, arMrca, ar_rankns, k);
-            if (ret == 3) return 3;
-            if(n % 2 == 0)
-                swap(ranks[i], ranks[n-1]);
-            else
-                swap(ranks[0], ranks[n-1]);
-        }
-        ret = generateAllRanksPermutations(newnode, newnodeGT, j, n-1, N, Numtaxa, ranks, strlbl, ar_y, s, probability,  topscounter, tops_count, temp_str, strGT, file, array_invcoal, arMrca, ar_rankns, k);
-        if (ret == 3) return 3;
-    }
+   }
+   }
+   else
+   {
+   for(int i = 0; i < n - 1; ++i)
+   {
+   ret = generateAllRanksPermutations(newnode, newnodeGT, j, n-1, N, Numtaxa, ranks, strlbl, ar_y, s, probability,  topscounter, tops_count, temp_str, strGT, file, array_invcoal, arMrca, ar_rankns, k);
+   if (ret == 3) return 3;
+   if(n % 2 == 0)
+   swap(ranks[i], ranks[n-1]);
+   else
+   swap(ranks[0], ranks[n-1]);
+   }
+   ret = generateAllRanksPermutations(newnode, newnodeGT, j, n-1, N, Numtaxa, ranks, strlbl, ar_y, s, probability,  topscounter, tops_count, temp_str, strGT, file, array_invcoal, arMrca, ar_rankns, k);
+   if (ret == 3) return 3;
+   }
 
-    return 2;
-}*/
+   return 2;
+   }*/
 
 
 vector<vector<int> > permuteRanks(Node *p)
@@ -269,12 +330,12 @@ Node * getNodeFromName (Node * p, int rankValueGT)
 
 void assignRanks(Node * newnodeGT, vector<int> v)
 {
-	Node * p;
-        for(int j = 1; j < v.size(); ++j)
-        {
-            p = getNodeFromName(newnodeGT, v[j]);
-            p -> rank = j+1;
-        }
+    Node * p;
+    for(int j = 1; j < v.size(); ++j)
+    {
+        p = getNodeFromName(newnodeGT, v[j]);
+        p -> rank = j+1;
+    }
 }
 
 
@@ -283,24 +344,24 @@ double searchOverRanks(Node * newnode, Node * newnodeGT, int Numtaxa, int ** ar_
     double probability = 0.;
     int prod = 1;
     int tops_count = numberOfRankings(newnodeGT, Numtaxa, prod);
-//    cout << "Number of topologies: " << tops_count << endl;
+    //    cout << "Number of topologies: " << tops_count << endl;
     vector<vector<int>> seq = permuteRanks(newnodeGT);
     if(seq.size() != tops_count) cout << "ERROR: not all ranks!" << endl;
-  //  cout << "seqsize: " << seq.size() << endl;
+    //  cout << "seqsize: " << seq.size() << endl;
     //for(int i = 100001; i < seq.size(); ++i)
     for(int i = 0; i < seq.size(); ++i)
     {
-    //    cout << "newnoderank " << newnodeGT -> rank << endl;
-	assignRanks(newnodeGT, seq[i]);
+        //    cout << "newnoderank " << newnodeGT -> rank << endl;
+        assignRanks(newnodeGT, seq[i]);
 
-      //  writeTree(newnodeGT);
-      //  string temp_str = "";
-       // temp_str = getGTtopology(newnodeGT, Numtaxa);
-      //  cout << temp_str << endl;
+        //  writeTree(newnodeGT);
+        //  string temp_str = "";
+        // temp_str = getGTtopology(newnodeGT, Numtaxa);
+        //  cout << temp_str << endl;
         double probabilitytmp = getGeneTreeProb(Numtaxa, s, newnode, newnodeGT, ar_y, array_invcoal, arMrca, ar_rankns, k);
-	probability += probabilitytmp;
-	file << getGTtopology(newnodeGT, Numtaxa) << " " << setprecision(15) << probabilitytmp << endl;
-     }
+        probability += probabilitytmp;
+        file << getGTtopology(newnodeGT, Numtaxa) << " " << setprecision(15) << probabilitytmp << endl;
+    }
     return probability;
 }
 
@@ -346,7 +407,7 @@ void calcUnrankedProb(int & arg_counter, char * argv[], int & N, Node* newnode, 
     int * ranks = new int[N-2];
     while(getline(finGT, strGT, '\n'))
     {
-      if(strGT.size() < 3) break;
+        if(strGT.size() < 3) break;
         count = 0;
         topcounter = 1;
         prod = 1;
@@ -361,16 +422,15 @@ void calcUnrankedProb(int & arg_counter, char * argv[], int & N, Node* newnode, 
         newnodeGT = stkGTunr.top();
         getDescTaxa(newnodeGT, N);
         newnodeGT -> rank = 1;
-        cout << "U" << endl;
         oneGTPr = searchOverRanks(newnode, newnodeGT, N, ar_y, s, outGT, array_invcoal, arMrca, ar_rankns, k);
         outUnr << strGT << '\t' << oneGTPr << endl;
         TOTAL_PROBABILITY += oneGTPr;
         delete [] ar_strlbl;
         deleteStack(stkGTunr);
         deleteTree(newnodeGT);
-
     }
-cout << TOTAL_PROBABILITY << endl;
+    cout << TOTAL_PROBABILITY << endl;
+
     delete [] ranks;
     delete [] array_invcoal;
 
@@ -387,8 +447,6 @@ cout << TOTAL_PROBABILITY << endl;
         delete [] k[i];
     }
     delete [] k;
-
-
 
     finGT.close();
     outGT.close();
@@ -412,7 +470,6 @@ void calcProbsUnrankedGtInput(int & arg_counter, char * argv[])
 
     speciesTreeProcessing(newnode, N, s_times, s, ar_y);
     calcUnrankedProb(arg_counter, argv, N, newnode, s, ar_y);
-
     for(int i = 0; i < N; ++i)
     {
         delete[] ar_y[i];
