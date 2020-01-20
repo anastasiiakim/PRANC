@@ -12,7 +12,7 @@ This will create an executable called *pranc*, which can be run from BIN with so
 Program options:
 
 | Option             |Description                                                       | Input files    | Output files        |
-| ------------------ |:-----------------------------------------------------------------|:---------------| :-------------------|
+| :------------------------ |:-----------------------------------------------------------------|:---------------| :-------------------|
 | -rprob             |calculates probabilities of ranked gene tree topologies           | <ul><li>species tree file</li><li>file containing ranked gene trees (with branch lengths)</li><li> file containing gene tree topologies (optional)</li></ul>|<ul><li>outRankGT.txt</li></ul>|
 | -uprob             |calculates probabilities of unranked gene tree topologies         | <ul><li>species tree file</li><li>file containing unranked gene trees (without branch lengths; branch lengths will be ignored if given)</li></ul>| <ul><li>outEachRankTopo.txt</li><li>outUnrGT.txt</li></ul>|
 | -sym               |outputs symbolic probabilities of ranked gene tree topologies     | <ul><li>species tree file</li><li>file containing ranked gene trees (with branch lengths)</li></ul>| <ul><li>outSymbolic.txt</li><li>outHistProbs.txt</li></ul>|
