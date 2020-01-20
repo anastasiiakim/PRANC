@@ -83,6 +83,22 @@ All input files should be in the Newick format. All trees are treated as rooted 
 ```
 * ```<unranked-tree-file-name>``` contains unranked trees in the Newick format. The branch lengths will be ignored if given.
 * The program outputs greedy consensus tree without branch lengths (*outGreedyCons.txt*). The method is different from the usual one (i.e. the one in *Phylip* (Majority consensus (extended) in *consense*)). This method outputs a tree that has a maximum score, where score is determined by summing the frequencies of compatible clades. Ties resolved randomly.
+```
+./pranc -like_nonni <species-tree-file-name> -rgt <ranked-tree-file-name>
+./pranc -like_nonni <species-tree-file-name> -ugt <unranked-tree-file-name>
+```
+* ```<ranked-tree-file-name>``` contains ranked trees in the Newick format. 
+* ```<unranked-tree-file-name>``` contains unranked trees in the Newick format. 
+* The program calculates maximum likelihood branch lengths using Brent's (1973) optimization technique for a given species tree topology. *PRANC* changes each length one at a time, fixing the other lengths. It allows the length to be in the interval *[0.001, 6]* coalescent units. Note that *PRANC* first computes maximum likelihood speciation intervals, and then translates them to the branch lengths by setting the time of the most recent internal node to 1.0 coalescent unit. *PRANC* randomly picks speciation interval orders for optimization. After *m* rounds of such optimizations (by default, *m* is set to the number of taxa (leaves)), the optimal tree is reported.
+```
+./pranc -like_nni <starting-species-tree-file-name> -rgt <ranked-tree-file-name>
+./pranc -like_nni <starting-species-tree-file-name> -ugt <unranked-tree-file-name>
+
+```
+* ```<starting-species-tree-file-name>``` contains one or more starting species trees in the Newick format. If all trees have the branch lengths, *PRANC* will treat the trees as ranked trees and will use them as starting trees. If the branch lengths are not specified in the trees, *PRANC* will first generate all possible rankings of all trees and then will use obtained ranked trees as starting trees.
+* ```<ranked-tree-file-name>``` contains ranked trees in the Newick format. 
+* ```<unranked-tree-file-name>``` contains unranked trees in the Newick format. 
+* The program processes the initial species trees and picks the one with the highest likelihood *T*. Then it searches a space of unranked trees to find trees that are one nearest neighbor interchange (NNI) away from *T*. After that, *PRANC* searches for the speciation interval lengths that maximizes the likelihood of the ranked gene trees. The process is repeated *k* times (*k=5* NNIs by default). At the end, *PRANC* calculates the branch lengths of the inferred tree.   
 
 
 ## Examples
