@@ -345,7 +345,7 @@ void getConsensusTree(int &  arg_counter, char* argv[])
             } 
             else
             { 
-                ss << c - 'A';//if A,B,C,..not t
+                ss << c - 'A'; //if A,B,C,..not t
             }   
            
 //            if(vec[i].first[j] == '|') continue;
