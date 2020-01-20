@@ -23,9 +23,9 @@ Program options:
 | -acmin             |outputs species tree MAC score                                    | <ul><li>species tree file</li><li>file containing ranked gene trees (with branch lengths)|<ul><li>outMacScore.txt</li></ul>|
 | -cons              |outputs greedy consensus tree without branch lengths              | <ul><li>file containing unranked gene trees (ranked trees will be treated as unranked treees)|<ul><li>outGreedyCons.txt</li></ul>|
 | -like_nonni <ul>-rgt</ul>|calculates ML interval lengths of a given species tree topology   | <ul><li>species tree file</li><li>file containing ranked gene trees (with branch lengths)</li></ul>|<ul><li>outNoNniMLTopo.txt</li></ul>|
-| -like_nonni -ugt   |calculates ML interval lengths of a given species tree topology   | <ul><li>species tree file</li><li>file containing unranked gene trees (without branch lengths; branch lengths will be ignored if given)|<ul><li>outNoNniMLTopo.txt</li></ul>|
-| -like_nni -rgt     |estimates ML species tree given a starting tree                   | <ul><li>starting species tree file</li><li>file containing ranked gene trees (with branch lengths)|<ul><li>outWithNniMLTopo.txt</li></ul>|
-| -like_nni -ugt     |estimates ML species tree given a starting tree                   | <ul><li>starting species tree file</li><li>file containing unranked gene trees (without branch lengths; branch lengths will be ignored if given)|<ul><li>outWithNniMLTopo.txt</li></ul>|
+| -like_nonni <ul>-ugt</ul>|calculates ML interval lengths of a given species tree topology   | <ul><li>species tree file</li><li>file containing unranked gene trees (without branch lengths; branch lengths will be ignored if given)|<ul><li>outNoNniMLTopo.txt</li></ul>|
+| -like_nni <ul>-rgt</ul>  |estimates ML species tree given a starting tree                   | <ul><li>starting species tree file</li><li>file containing ranked gene trees (with branch lengths)|<ul><li>outWithNniMLTopo.txt</li></ul>|
+| -like_nni <ul>-ugt</ul>  |estimates ML species tree given a starting tree                   | <ul><li>starting species tree file</li><li>file containing unranked gene trees (without branch lengths; branch lengths will be ignored if given)|<ul><li>outWithNniMLTopo.txt</li></ul>|
 
 
 
