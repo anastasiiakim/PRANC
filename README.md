@@ -20,7 +20,7 @@ Program options:
 | -utopo             |outputs unranked tree topologies and frequencies of the topologies| <ul><li>file containing unranked trees (without branch lengths; branch lengths will be ignored if given)</li></ul>| <ul><li>outUnrTopos.txt</li><li>outUnrFreqs.txt</li></ul>|
 | -write             |outputs tree with ranks instead of branch lengths                 | <ul><li>file containing one ranked gene tree (with branch lengths)</li></ul>|<ul><li>outRankTree.txt</li></ul>|
 | -rank_trees        |outputs all ranked topologies that share same unranked topology   | <ul><li>file containing unranked gene trees (without branch lengths; branch lengths will be ignored if given)</li></ul>|<ul><li>outRankTopos.txt</li></ul>|
-| -acmin             |outputs species tree MAC score                                    | <ul><li>species tree file</li><li>file containing ranked gene trees (with branch lengths)|<ul><li>outMacScore.txt</li></ul>|
+| -mac               |outputs species tree MAC score                                    | <ul><li>species tree file</li><li>file containing ranked gene trees (with branch lengths)|<ul><li>outMacScore.txt</li></ul>|
 | -cons              |outputs greedy consensus tree without branch lengths              | <ul><li>file containing unranked gene trees (ranked trees will be treated as unranked treees)|<ul><li>outGreedyCons.txt</li></ul>|
 | -like_nonni <ul>-rgt</ul>|calculates ML interval lengths of a given species tree topology   | <ul><li>species tree file</li><li>file containing ranked gene trees (with branch lengths)</li></ul>|<ul><li>outNoNniMLTopo.txt</li></ul>|
 | -like_nonni <ul>-ugt</ul>|calculates ML interval lengths of a given species tree topology   | <ul><li>species tree file</li><li>file containing unranked gene trees (without branch lengths; branch lengths will be ignored if given)|<ul><li>outNoNniMLTopo.txt</li></ul>|
@@ -216,3 +216,92 @@ outUnrFreqs:
 1	t1|t2|-t3|t4|-t5|t6|-t7|t8|-t5|t6|t7|t8|-t3|t4|t5|t6|t7|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
 ```
 
+#### Example 8 (-write)
+```
+./pranc -write st_5taxon.txt 
+```
+output:
+
+outRankTree.txt:
+```
+((B:2,E:2):2,(A:3,(C:1,D:1):2):1);
+```
+
+#### Example 9 (-rank_trees)
+```
+./pranc -rank_trees unrgt_5taxon.txt
+```
+output:
+
+outRankTopos.txt:
+```
+((B:3,E:3):1,(A:2,(C:1,D:1):1):2);
+((B:2,E:2):2,(A:3,(C:1,D:1):2):1);
+((B:1,E:1):3,(A:3,(C:2,D:2):1):1);
+```
+
+#### Example 10 (-mac)
+```
+./pranc -mac st_5taxon.txt rgt_5taxon.txt
+```
+output:
+
+outMacScore.txt:
+```
+2
+```
+
+#### Example 11 (-cons)
+```
+./pranc -cons unrgts.txt
+```
+output:
+
+outGreedyCons.txt:
+```
+((t6,(t1,t2)),((t3,t4),(t5,(t7,t8))));
+```
+
+#### Example 12 (-like_nonni -rgt)
+```
+./pranc -like_nonni st_5taxon.txt -rgt rgt_5taxon.txt
+```
+output:
+
+outNoNniMLTopo.txt (your estimated branch lengths will be slightly different):
+```
+((B:0.375797,E:0.375797):7.173825,(A:1.549622,(C:0.100000,D:0.100000):1.449622):6.000000);
+```
+
+#### Example 12 (-like_nonni -ugt)
+```
+./pranc -like_nonni st_5taxon.txt -ugt ugt_5taxon.txt
+```
+output:
+
+outNoNniMLTopo.txt (your estimated branch lengths will be slightly different):
+```
+((B:0.100100,E:0.100100):0.000200,(A:0.100200,(C:0.100000,D:0.100000):0.000200):0.000100);
+```
+
+#### Example 13 (-like_nni -rgt)
+```
+./pranc -like_nni st_5taxon.txt -rgt rgt_5taxon.txt
+```
+output:
+
+outWithNniMLTopo.txt (your estimated branch lengths and topology might be slightly different):
+```
+((B:0.376472,E:0.376472):7.173572,(A:1.550044,(C:0.100000,D:0.100000):1.450044):6.000000);
+```
+
+#### Example 14 (-like_nni -ugt)
+```
+./pranc -like_nni st_5taxon.txt -ugt ugt_5taxon.txt
+```
+output:
+
+outWithNniMLTopo.txt (your estimated branch lengths and topology might be slightly different):
+```
+(((E:0.100000,D:0.100000):0.592201,A:0.692201):0.255117,(B:0.246954,C:0.246954):0.700365);
+```
