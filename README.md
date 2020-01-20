@@ -13,11 +13,21 @@ Program options:
 
 | Option        |Description| Input files   | Output files                   |
 | ------------- |:----------|:---------------| :------------------------------|
-| -rprob        |calculates probs of ranked gene tree topologies| <ul><li>species tree file</li><li>file containing ranked gene trees (with branch lengths)</li><li> file containing gene tree topologies (optional)</li></ul>|<ul><li>STtopo.txt</li><li>outRankGT.txt</li></ul>|
-| -uprob        |calculates probs of ranked gene tree topologies| <ul><li>species tree file</li><li>file containing unranked gene trees (without branch lengths)</li></ul>| <ul><li>STtopo.txt</li><li>outUnrGT.txt</li><li>unrGT.txt</li></ul>|
-| -sym        |calculates probs of ranked gene tree topologies| <ul><li>species tree file</li><li>file containing ranked gene trees (with branch lengths)</li></ul>| <ul><li>STtopo.txt</li><li>out_symbolic.txt</li><li>hist_probs.txt</li></ul>|
-| -rtopo        |calculates probs of ranked gene tree topologies| <li>file containing ranked trees (with branch lengths specified)</li></ul>| <ul><li>rtopos.txt</li><li>rfreqs.txt</li></ul>|
-| -utopo        |calculates probs of ranked gene tree topologies| <li>file containing unranked trees (with or without branch lengths specified)</li></ul>| <ul><li>utopos.txt</li><li>ufreqs.txt</li></ul>|
+| -rprob        |calculates probabilities of ranked gene tree topologies| <ul><li>species tree file</li><li>file containing ranked gene trees (with branch lengths)</li><li> file containing gene tree topologies (optional)</li></ul>|<ul><li>outRankGT.txt</li></ul>|
+| -uprob        |calculates probabilities of unranked gene tree topologies| <ul><li>species tree file</li><li>file containing unranked gene trees (without branch lengths; branch lengths will be ignored if given)</li></ul>| <ul><li>outEachRankTopo.txt</li><li>outUnrGT.txt</li></ul>|
+| -sym        |outputs symbolic probabilities of ranked gene tree topologies| <ul><li>species tree file</li><li>file containing ranked gene trees (with branch lengths)</li></ul>| <ul><li>outSymbolic.txt</li><li>outHistProbs.txt</li></ul>|
+| -rtopo        |outputs ranked tree topologies and frequencies of the topologies| <li>file containing ranked trees (with branch lengths specified)</li></ul>| <ul><li>outRankTopos.txt</li><li>outRankFreqs.txt</li></ul>|
+| -utopo        |outputs unranked tree topologies and frequencies of the topologies| <li>file containing unranked trees (with or without branch lengths specified)</li></ul>| <ul><li>outUnrTopos.txt</li><li>outUnrFreqs.txt</li></ul>|
+| -write        |outputs tree with ranks instead of branch lengths| <ul><li>file containing one ranked gene tree (with branch lengths)</li></ul>|<ul><li>outRankTree.txt</li></ul>|
+| -rank_trees   |outputs all ranked topologies that share same unranked topology| <ul><li>file containing unranked gene trees (without branch lengths; branch lengths will be ignored if given)</li></ul>|<ul><li>outRankTopos.txt</li></ul>|
+| -acmin        |outputs species tree MAC score| <ul><li>species tree file</li><li>file containing ranked gene trees (with branch lengths)|<ul><li>outMacScore.txt</li></ul>|
+| -cons         |outputs greedy consensus tree without branch lengths| <ul><li>file containing unranked gene trees (ranked trees will be treated as unranked treees)|<ul><li>outGreedyConsensus.txt</li></ul>|
+| -like_nonni -rgt |calculates ML interval lengths of a given species tree topology| <ul><li>species tree file</li><li>file containing ranked gene trees (with branch lengths)</li></ul>|<ul><li>outNoNniMLTopo.txt</li></ul>|
+| -like_nonni -ugt |calculates ML interval lengths of a given species tree topology| <ul><li>species tree file</li><li>file containing unranked gene trees (without branch lengths; branch lengths will be ignored if given)|<ul><li>STtopo.txt</li><li>outNoNniMLTopo.txt</li></ul>|
+| -like_nni -rgt |estimates ML species tree given a starting tree| <ul><li>starting species tree file</li><li>file containing ranked gene trees (with branch lengths)|<ul><li>STtopo.txt</li><li>outWithNniMLTopo.txt</li></ul>|
+| -like_nni -ugt |estimates ML species tree given a starting tree| <ul><li>starting species tree file</li><li>file containing unranked gene trees (without branch lengths; branch lengths will be ignored if given)|<ul><li>STtopo.txt</li><li>outWithNniMLTopo.txt</li></ul>|
+
+
 
 All input files should be in the Newick format. All trees are treated as rooted binary trees. We assume an ultrametric species tree (leaves of the tree are all equidistant from the root). The taxon names of gene trees should match the taxon names of the corresponding species tree. User can run *PRANC* with either *-rprob*, *-uprob*, *-sym*, *-rtopo*, or *-utopo* option as shown below.  
 
