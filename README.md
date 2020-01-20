@@ -80,7 +80,7 @@ outRankGT.txt (probabilities and ranked topologies):
 0.00925435	ACD-2-CD-3-BE-4-
 ```
 
-#### Example 2
+#### Example 2 (-rprob)
 ```
 ./pranc -rprob st_5taxon.txt rgt_5taxon.txt
 ```
@@ -95,7 +95,7 @@ outRankGT.txt (probabilities):
 0.00925435	
 ```
 
-#### Example 3
+#### Example 3 (-uprob)
 ```
 ./pranc -uprob st_5taxon.txt unrgt_5taxon.txt 
 ```
@@ -114,7 +114,7 @@ outUnrGT.txt (unranked tree and probability):
 ((B,E),(A,(C,D)));	0.146615
 ```
 
-#### Example 4
+#### Example 4 (-sym)
 ```
 ./pranc -sym st_5taxon.txt gt_5taxon.txt 
 ```
@@ -145,7 +145,7 @@ outSymbolic.txt (first block shows the probability of the ranked history *1234*,
 ```
 
 
-#### Example 5
+#### Example 5 (-rtopo)
 ```
 ./pranc -rtopo 5taxa_trees.txt
 ```
@@ -169,7 +169,7 @@ outRankFreqs.txt:
 ```
 
 
-#### Example 6
+#### Example 6 (-utopo)
 ```
 ./pranc -utopo 5taxa_trees.txt
 ```
@@ -191,7 +191,7 @@ outUnrFreqs.txt:
 ```
 
 
-#### Example 7
+#### Example 7 (-utopo)
 ```
 ./pranc -utopo unrgts.txt
 ```
@@ -215,3 +215,4 @@ outUnrFreqs:
 1	t1|t2|-t7|t8|-t1|t2|t3|-t6|t7|t8|-t1|t2|t3|t4|-t5|t6|t7|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
 1	t1|t2|-t3|t4|-t5|t6|-t7|t8|-t5|t6|t7|t8|-t3|t4|t5|t6|t7|t8|-t1|t2|t3|t4|t5|t6|t7|t8|-
 ```
+
