@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <stack>
+#include <map>
 #include <cmath>
 #include <algorithm>
 #include "string_manipulations.h"
@@ -10,7 +11,6 @@
 #include "get_unranked_topology.h"
 
 using namespace std;
-
 void getClades (Node * p, std::stack <string> & allTaxa)
 {
     if(p -> label.size() == 0)
@@ -20,7 +20,6 @@ void getClades (Node * p, std::stack <string> & allTaxa)
         allTaxa.push(p -> desctaxa);
     }
 }
-
 
 int countNumberTaxa(int & indicator, string & str)
 {
@@ -120,6 +119,10 @@ void getUnrDescTaxa(Node * p, int N)
 
 
 
+
+
+
+
 void outputUnrankedTopology(int &  arg_counter, char* argv[])
 {
     string str;
@@ -134,7 +137,7 @@ void outputUnrankedTopology(int &  arg_counter, char* argv[])
     gt_file.close();
 
     gt_file.open(argv[arg_counter]);
-    ofstream topo_file("utopos.txt");
+    ofstream topo_file("outUnrTopos.txt");
 
     if(indicator == 0)
     {
@@ -169,6 +172,7 @@ void outputUnrankedTopology(int &  arg_counter, char* argv[])
             {
                 topo_file << tempstr[j] << "-";
             }
+
             topo_file << endl;
             deleteStack(stkST);
             deleteTree(newnode);
@@ -207,20 +211,132 @@ void outputUnrankedTopology(int &  arg_counter, char* argv[])
             {
                 topo_file << tempstr[j] << "-";
             }
+
             topo_file << endl;
             deleteStack(stkST);
             deleteTree(newnode);
         }
     }
-    ofstream freq_file("ufreqs.txt");
+    ofstream freq_file("outUnrFreqs.txt");
     topo_file.close();
 
     ifstream infile;
-    infile.open("utopos.txt");
+    infile.open("outUnrTopos.txt");
     if (infile.is_open()) countUniqueStrings(infile, freq_file);
     freq_file.close();
     gt_file.close();
     infile.close();
 
 }
+
+
+
+
+
+
+/*Jan13
+  void outputUnrankedTopology(int &  arg_counter, char* argv[])
+  {
+  string str;
+  string arg;
+  ifstream gt_file(argv[arg_counter]);
+
+  getline(gt_file, str, ';');
+  int indicator = 0;
+  int lbl = countNumberTaxa(indicator, str);
+  int N = lbl;
+  int dummy = 0;
+  gt_file.close();
+
+  gt_file.open(argv[arg_counter]);
+  ofstream topo_file("utopos.txt");
+
+  if(indicator == 0)
+  {
+  while(getline(gt_file, str, ';'))
+  {
+  if(str.size() < 3) break;
+  removeSpaces(str);
+  std::stack <Node *> stkST;
+  string ar_strlbl[N-1];
+  pushNodesUnrankedGT(dummy, stkST, str, ar_strlbl);
+  Node * newnode = stkST.top();
+  countParentheses(str); 
+
+  stack <string> allTaxa;
+  getUnrDescTaxa(newnode, N);
+  getClades(newnode, allTaxa);
+
+  int tmpcount = 0;
+  string tempstr[N];
+
+  while(!allTaxa.empty())
+  {
+  tempstr[tmpcount] = allTaxa.top();
+  allTaxa.pop();
+  tmpcount++;  
+  }
+
+  sortStringsBySize(tempstr, N-1);
+  finSort(N-1, tempstr);
+
+  for(int j = 0; j < N-1; ++j)
+  {
+  topo_file << tempstr[j] << "-";
+  }
+  topo_file << endl;
+  deleteStack(stkST);
+  deleteTree(newnode);
+  }
+  }
+  else
+  {
+  while(getline(gt_file, str, ';'))
+  {
+  if(str.size() < 3) break;
+
+  removeSpaces(str);
+  stack <Node *> stkST;
+  countParentheses(str); 
+  pushNodes(lbl, stkST, str);
+  Node * newnode = stkST.top();
+
+  stack <string> allTaxa;
+  getUnrDescTaxa(newnode, N);
+  getClades(newnode, allTaxa);
+
+int tmpcount = 0;
+string tempstr[N];
+
+while(!allTaxa.empty())
+{
+    tempstr[tmpcount] = allTaxa.top();
+    allTaxa.pop();
+    tmpcount++;  
+}
+
+sortStringsBySize(tempstr, N-1);
+finSort(N-1, tempstr);
+
+for(int j = 0; j < N-1; ++j)
+{
+    topo_file << tempstr[j] << "-";
+}
+topo_file << endl;
+deleteStack(stkST);
+deleteTree(newnode);
+}
+}
+ofstream freq_file("ufreqs.txt");
+topo_file.close();
+
+ifstream infile;
+infile.open("utopos.txt");
+if (infile.is_open()) countUniqueStrings(infile, freq_file);
+freq_file.close();
+gt_file.close();
+infile.close();
+
+}
+*/
 

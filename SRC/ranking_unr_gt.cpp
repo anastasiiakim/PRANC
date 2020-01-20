@@ -371,8 +371,8 @@ void calcUnrankedProb(int & arg_counter, char * argv[], int & N, Node* newnode, 
     string strGT="";
     ifstream finGT(argv[arg_counter]); //"gtuniqtrees.txt"
     ++arg_counter;
-    ofstream outGT("outUnrGT.txt", ios::out | ios::app);
-    ofstream outUnr("unrGT.txt", ios::out | ios::app);
+    ofstream outGT("outEachRankTopo.txt", ios::out | ios::app);
+    ofstream outUnr("outUnrGT.txt", ios::out | ios::app);
     double TOTAL_PROBABILITY = 0.;
 
     int prod;

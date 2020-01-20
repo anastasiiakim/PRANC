@@ -1,4 +1,4 @@
-#include <string>
+#include <string.h>
 #include <fstream>
 #include <iostream>
 #include <stack>
@@ -924,7 +924,8 @@ void calcLikeNoNNI(int & arg_counter, char* argv[])
 	
 	Node * newnode;
 	int N = getNumberOfTaxa(arg_counter, argv, newnode);
-	double * s_times = new double [N-1];
+	
+    double * s_times = new double [N-1];
 	double * s = new double [N-2];
 	int ** ar_y = new int * [N];
 	for (int i = 0; i < N; i++) ar_y[i] = new int [N];
@@ -936,18 +937,27 @@ void calcLikeNoNNI(int & arg_counter, char* argv[])
 		}
 
 	speciesTreeProcessing(newnode, N, s_times, s, ar_y);
-
-	ifstream finGT(argv[arg_counter]);
-	++arg_counter;
 	vector<string> gts_vect;
-	string strR = "";
-	while(getline(finGT >> std::ws, strR, ';'))
-	{
-		if(strR.size() < 3) break;
-		removeSpaces(strR);
-		gts_vect.push_back(strR);
-	}
-	finGT.close();
+
+    if(strcmp(argv[arg_counter],"-ugt") == 0)
+    {
+    	++arg_counter;
+        writeRankedUnrTreesIntoVect(arg_counter, argv, gts_vect);
+    }
+    else if(strcmp(argv[arg_counter],"-rgt") == 0)
+    {
+    	++arg_counter;
+        ifstream finGT(argv[arg_counter]);
+	    string strR = "";
+
+        while(getline(finGT >> std::ws, strR, ';'))
+	    {
+		    if(strR.size() < 3) break;
+		    removeSpaces(strR);
+		    gts_vect.push_back(strR);
+	    }
+	    finGT.close();
+    }
 
 
 	vector<int> index_vector;
@@ -1033,7 +1043,7 @@ void calcLikeNoNNI(int & arg_counter, char* argv[])
 	unBeadSpeciesTree(newnode);
 
 	writeTreeWithBrLengths(newnode, temp, N, candidate_str, s, x);
-	ofstream ftop("nonni_res_top.txt", ios::out | ios::app);
+	ofstream ftop("outNoNniMLTopo.txt", ios::out | ios::app);
 	ftop << candidate_str << ";" << endl;
 	ftop.close();
 
@@ -1358,11 +1368,13 @@ void calcLikeWithNNI(int & arg_counter, char* argv[])
 	}
 	st_file.close();
 
-
+/*
 	ifstream finGT(argv[arg_counter]);
 	++arg_counter;
 	vector<string> gts_vect;
-	strR = "";
+
+
+    strR = "";
 	while(getline(finGT >> std::ws, strR, ';'))
 	{
 		if(strR.size() < 3) break;
@@ -1370,6 +1382,37 @@ void calcLikeWithNNI(int & arg_counter, char* argv[])
 		gts_vect.push_back(strR);
 	}
 	finGT.close();
+*/
+
+	vector<string> gts_vect;
+
+    if(strcmp(argv[arg_counter],"-ugt") == 0)
+    {
+    	++arg_counter;
+        writeRankedUnrTreesIntoVect(arg_counter, argv, gts_vect);
+    }
+    else if(strcmp(argv[arg_counter],"-rgt") == 0)
+    {
+    	++arg_counter;
+        ifstream finGT(argv[arg_counter]);
+	    string strR = "";
+
+        while(getline(finGT >> std::ws, strR, ';'))
+	    {
+		    if(strR.size() < 3) break;
+		    removeSpaces(strR);
+		    gts_vect.push_back(strR);
+	    }
+	    finGT.close();
+    }
+
+
+
+
+
+
+
+
 
 	int N;
 	int tree_num = pickInitialCandidate(sp_vect, gts_vect, N, newnode);
@@ -1550,7 +1593,7 @@ void calcLikeWithNNI(int & arg_counter, char* argv[])
        */
       //  cout << "total nni: " << nni_counts << endl;
 //	cout << "fin log-like: " << threshold << endl;
-	ofstream ftop("cons_nni_res_top.txt", ios::out | ios::app);
+	ofstream ftop("outWithNniMLTopo.txt", ios::out | ios::app);
 	ftop << candidate_str << ";" << endl;
 	ftop.close();
 //	for(int t = 0; t < N - 2; ++t)

@@ -97,6 +97,7 @@ int calcCostForST(int & arg_counter, char* argv[], int & N, Node * newnode)
 
 void searchCandidateSpTreeTopology(int &  arg_counter, char* argv[])
 {
+    ofstream fout("outMacScore.txt");
     Node * newnode;
     int N = getNumberOfTaxa(arg_counter, argv, newnode);
     double * s_times = new double [N-1];
@@ -112,7 +113,7 @@ void searchCandidateSpTreeTopology(int &  arg_counter, char* argv[])
 
     speciesTreeProcessing(newnode, N, s_times, s, ar_y);
 
-    cout << calcCostForST(arg_counter, argv, N, newnode) << endl;
+    fout << calcCostForST(arg_counter, argv, N, newnode) << endl;
 
     for(int i = 0; i < N; ++i)
     {
@@ -122,6 +123,6 @@ void searchCandidateSpTreeTopology(int &  arg_counter, char* argv[])
     delete[] s_times;
     delete[] s;
     deleteTree(newnode);
-
+    fout.close();
 }
 

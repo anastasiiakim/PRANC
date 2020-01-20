@@ -1,6 +1,6 @@
 #ifndef ML_H
 #define ML_H
-#include <string>
+#include <string.h>
 #include <fstream>
 #include <iostream>
 #include <stack>

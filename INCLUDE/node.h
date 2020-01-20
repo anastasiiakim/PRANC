@@ -26,6 +26,42 @@ struct Node
         leavesnum = 0.;
         //  printf("nodeWithName %d created \n", debug_name);
     };
+    Node (string _label)
+    {
+        debug_name = st_count;
+        st_count++;
+        right = NULL;
+        left = NULL;
+        parent = NULL;
+        label = _label;
+        desctaxa = "";
+        rank = 0;
+        length = 0.;
+        time = 0.;
+        distFrRoot = 0.;
+        leavesnum = 0.;
+        
+        //  printf("nodeWithName %d created \n", debug_name);
+    };
+    Node (Node *pL, Node *pR)
+    {
+        debug_name = st_count;
+        st_count++;
+        parent = NULL;
+        label = "";
+        desctaxa = "";
+        rank = 0;
+        length = 0.;
+        time = 0.;
+        distFrRoot = 0.;
+        leavesnum = 0.;
+        left = pL;
+        right = pR;
+        pL->parent = this;
+        pR->parent = this;
+        //  printf("nodeWithName %d created \n", debug_name);
+    };
+
     static int st_count;
     int debug_name;
     double length;
@@ -36,6 +72,7 @@ struct Node
     int population; // from L to R
     int outdegree;
     int leavesnum;
+    int leaf_id;
 };
 
 

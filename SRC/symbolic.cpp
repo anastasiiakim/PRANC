@@ -151,8 +151,8 @@ double getSymbolicGeneTreeProb(int & arg_counter, char* argv[], int & N, Node * 
   string strGT="";
   ifstream finGT(argv[arg_counter]); 
   ++arg_counter;
-  ofstream fout("out_symbolic.txt");
-  ofstream histprobs_file("hist_probs.txt");
+  ofstream fout("outSymbolic.txt");
+  ofstream histprobs_file("outHistProbs.txt");
 
   double total = 0.;
   Node ** arMrca = new Node * [N-1];

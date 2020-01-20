@@ -40,7 +40,7 @@ void outputRankedTopology(int & arg_counter, char* argv[])
     string str;
     string hash = "|";
     ifstream gt_file(argv[arg_counter]);
-    ofstream topo_file("rtopos.txt");
+    ofstream topo_file("outRankTopos.txt");
 
     while(getline(gt_file, str, ';'))
     {
@@ -112,11 +112,11 @@ void outputRankedTopology(int & arg_counter, char* argv[])
         deleteStack(stkST);
         deleteTree(newnode);
     }
-    ofstream freq_file("rfreqs.txt");
+    ofstream freq_file("outRankFreqs.txt");
     topo_file.close();
 
     ifstream infile;
-    infile.open("rtopos.txt");
+    infile.open("outRankTopos.txt");
     if (infile.is_open()) countUniqueStrings(infile, freq_file);
     freq_file.close();
     gt_file.close();
