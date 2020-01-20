@@ -1,5 +1,5 @@
 # PRANC
-can be used to compute the probabilities of ranked or unranked phylogenetic gene tree topologies given a species tree under the coalescent process. It can also output "democratic vote" (most frequent) ranked or unranked topologies. *PRANC* can also estimate the maximum likelihood species tree with branch lengths from the sample of ranked or unranked gene tree topologies. Greedy consensus tree can be used as a starting tree. Also, trees selected by minimization of ancient coalescence (MAC) criterion can be used as starting trees.
+can be used to compute the probabilities of ranked or unranked phylogenetic gene tree topologies given a species tree under the coalescent process. A ranked tree depicts not only the topological relationship among gene lineages, as an unranked tree does, but also the sequence in which the lineages coalesce. *PRANC* can also output "democratic vote" (most frequent) ranked or unranked topologies. *PRANC* can estimate the maximum likelihood species tree with branch lengths from the sample of ranked or unranked gene tree topologies. Greedy consensus tree can be used as a starting tree. Also, trees selected by minimization of ancient coalescence (MAC) criterion can be used as starting trees.
 
 ## Installation
 After downloading the source code, go to SRC directory and type
@@ -22,10 +22,10 @@ Program options:
 | -rank_trees        |outputs all ranked topologies that share same unranked topology   | <ul><li>file containing unranked gene trees (without branch lengths; branch lengths will be ignored if given)</li></ul>|<ul><li>outRankTopos.txt</li></ul>|
 | -mac               |outputs species tree MAC score                                    | <ul><li>species tree file</li><li>file containing ranked gene trees (with branch lengths)|<ul><li>outMacScore.txt</li></ul>|
 | -cons              |outputs greedy consensus tree without branch lengths              | <ul><li>file containing unranked gene trees (ranked trees will be treated as unranked treees)|<ul><li>outGreedyCons.txt</li></ul>|
-| -like_nonni <ul>-rgt</ul>|calculates ML interval lengths of a given species tree topology   | <ul><li>species tree file</li><li>file containing ranked gene trees (with branch lengths)</li></ul>|<ul><li>outNoNniMLTopo.txt</li></ul>|
-| -like_nonni <ul>-ugt</ul>|calculates ML interval lengths of a given species tree topology   | <ul><li>species tree file</li><li>file containing unranked gene trees (without branch lengths; branch lengths will be ignored if given)|<ul><li>outNoNniMLTopo.txt</li></ul>|
-| -like_nni <ul>-rgt</ul>  |estimates ML species tree given a starting tree                   | <ul><li>starting species tree file</li><li>file containing ranked gene trees (with branch lengths)|<ul><li>outWithNniMLTopo.txt</li></ul>|
-| -like_nni <ul>-ugt</ul>  |estimates ML species tree given a starting tree                   | <ul><li>starting species tree file</li><li>file containing unranked gene trees (without branch lengths; branch lengths will be ignored if given)|<ul><li>outWithNniMLTopo.txt</li></ul>|
+| -like_nonni <ul>-rgt</ul>|calculates ML interval lengths of a given species tree topology       | <ul><li>species tree file</li><li>file containing ranked gene trees (with branch lengths)</li></ul>|<ul><li>outNoNniMLTopo.txt</li></ul>|
+| -like_nonni <ul>-ugt</ul>|calculates ML interval lengths of a given species tree topology       | <ul><li>species tree file</li><li>file containing unranked gene trees (without branch lengths; branch lengths will be ignored if given)  |<ul><li>outNoNniMLTopo.txt</li></ul>|
+| -like_nni <ul>-rgt</ul>  |estimates ML species tree given a starting tree (one or more)         | <ul><li>starting species tree file</li><li>file containing ranked gene trees (with branch lengths)|<ul><li>outWithNniMLTopo.txt</li></ul>|
+| -like_nni <ul>-ugt</ul>  |estimates ML species tree given a starting tree (one or more)         | <ul><li>starting species tree file</li><li>file containing unranked gene trees (without branch lengths; branch lengths will be ignored if given)|<ul><li>outWithNniMLTopo.txt</li></ul>|
 
 
 
@@ -60,6 +60,29 @@ All input files should be in the Newick format. All trees are treated as rooted 
 ```
 * ```<unranked-tree-file-name>``` contains one or more unranked trees in the Newick format. 
 * The program outputs unranked tree topologies (*outUnrTopos.txt*) and frequencies of the topologies (*outUnrFreqs.txt*). Species names are separated by "|" character, and groups of clades separated by "-" character.
+
+
+
+```
+./pranc -write <ranked-tree-file-name>
+```
+* ```<ranked-tree-file-name>``` contains one ranked tree in the Newick format. 
+* The program outputs tree with ranks instead of branch lengths in the Newick format (*outRankTree.txt*).
+```
+./pranc -rank_trees <unranked-tree-file-name>
+```
+* ```<unranked-tree-file-name>``` contains one or more unranked trees in the Newick format. 
+* The program outputs all ranked tree topologies that share given unranked topology (*outRankTopos.txt*).
+```
+./pranc -mac <species-tree-file-name> <ranked-gene-tree-file-name>
+```
+* ```<ranked-tree-file-name>``` contains one ranked tree in the Newick format. 
+* The program outputs score for the species tree based on the minimization of ancient coalescence (MAC) criterion (*outMacScore.txt*).
+```
+./pranc -cons <unranked-tree-file-name>
+```
+* ```<unranked-tree-file-name>``` contains unranked trees in the Newick format. The branch lengths will be ignored if given.
+* The program outputs greedy consensus tree without branch lengths (*outGreedyCons.txt*). The method is different from the usual one (i.e. the one in *Phylip* (Majority consensus (extended) in *consense*)). This method outputs a tree that has a maximum score, where score is determined by summing the frequencies of compatible clades. Ties resolved randomly.
 
 
 ## Examples
