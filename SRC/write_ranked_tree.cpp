@@ -97,7 +97,10 @@ int calcNumberOfTaxa (std::string str)
     {
         if(((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z')) && ((i+1) < (int) str.size()))// && (str[i+1] != '-' && str[i+1] != '+'))
         {
-            ++lbl;
+            if(str[i+1] == ',' || str[i+1] == ')')
+            {
+                ++lbl;
+            }
         }
         ++i;
     }
@@ -130,7 +133,6 @@ void writeRankedUnrTreesIntoVect(int & arg_counter, char * argv[], vector<string
         newnode = stkGTunr.top();
         getDescTaxa(newnode, N);
         newnode -> rank = 1;
-
         int prod = 1;
         str = "";
         int temp = 0;
