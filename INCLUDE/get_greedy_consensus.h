@@ -19,41 +19,10 @@ struct BagOfNodes
 {
     vector<Node*> m;
     // Constructor
-
     BagOfNodes(){};
-    BagOfNodes(vector<string> str)
-    {
-        for(unsigned i = 0; i < str.size(); ++i)
-        {
-            m.push_back(new Node(str[i]));
-        }
-    };
-    BagOfNodes(vector<string> str, const BagOfNodes & b)
-    {
-        for(unsigned i = 0; i < str.size(); ++i)
-        {
-            for(unsigned j = 0; j < b.m.size(); ++j)
-            {
-                if (b.m[j]->label == str[i])
-                {
-                    m.push_back(b.m[j]);
-                    break;
-                } 
-            }
-        }
-    };
-    void clip(Node * rule)
-    {
-        auto it = m.end();
-        it = find(m.begin(), m.end(), rule->left);
-        if (it != m.end()) m.erase(it);
-        it = find(m.begin(), m.end(), rule->right);
-        if (it != m.end())
-        {
-            m.erase(it);
-            m.push_back(rule);
-        }
-    };
+    BagOfNodes(vector<string> str);
+    BagOfNodes(vector<string> str, const BagOfNodes & b);
+    void clip(Node *);
 };
 
 Node* makeTree(vector<vector<string>> strs);

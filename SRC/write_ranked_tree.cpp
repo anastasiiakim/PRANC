@@ -6,7 +6,6 @@
 #include <vector>
 #include <algorithm>
 #include <iomanip> // output more decimals
-#define eps 0.0e-10
 #include "string_manipulations.h"
 #include "node.h"
 #include "probs_calculation.h"
@@ -95,8 +94,10 @@ int calcNumberOfTaxa (std::string str)
     int i = 0;
     while(i < (int) str.size())
     {
-        if(((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z')) && ((i+1) < (int) str.size()))// && (str[i+1] != '-' && str[i+1] != '+'))
+	if(((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z')) && ((i+1) < (int) str.size()))
         {
+            
+	    if ((static_cast<int> (str[i+1] - '0') >= 0 && static_cast<int> (str[i+1] - '0') <= 9)) ++i; //allow t1,t2,... taxa names
             if(str[i+1] == ',' || str[i+1] == ')')
             {
                 ++lbl;
@@ -133,6 +134,7 @@ void writeRankedUnrTreesIntoVect(int & arg_counter, char * argv[], vector<string
         newnode = stkGTunr.top();
         getDescTaxa(newnode, N);
         newnode -> rank = 1;
+
         int prod = 1;
         str = "";
         int temp = 0;

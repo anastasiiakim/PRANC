@@ -18,7 +18,7 @@ using namespace std;
 
 
 
-int g_i(int & N, int & i, Node * nodeST, Node * nodeGT)
+int g_i(int & N, int & i, vector <Node *> v, Node * nodeGT)
 {
    std::stack <Node *> allTaxa;
    int res = 0;
@@ -30,7 +30,7 @@ int g_i(int & N, int & i, Node * nodeST, Node * nodeGT)
     for(int k = j; k < N; ++k)
     {
         getTaxa(getNodeFromRank(nodeGT, k), allTaxa);
-        mrcanode  = getMrca(nodeST, allTaxa);
+        mrcanode  = getMrca(v, allTaxa);
 
         if(mrcanode -> rank <= i) prod = 0;
     }
@@ -40,20 +40,21 @@ int g_i(int & N, int & i, Node * nodeST, Node * nodeGT)
    return N - res;
 }
 
-int totalNumExtraLineages(int & N, Node * nodeST, Node * nodeGT)
+int totalNumExtraLineages(int & N, vector <Node *> v, Node * nodeGT)
 {
 
     int sum = 0;
     for(int t = 1; t < N; ++t)
     {
-        sum += g_i(N, t, nodeST, nodeGT) - (t + 1);
+      //  cout << t << " " << g_i(N, t, nodeST, nodeGT) << endl;
+        sum += g_i(N, t, v, nodeGT) - (t + 1);
     }
     return sum;
 }
 
 
 
-int calcCostForST(int & arg_counter, char* argv[], int & N, Node * newnode)
+int calcCostForST(int & arg_counter, char* argv[], int & N, vector <Node *> v)
 {
     string strGT="";
     ifstream finGT(argv[arg_counter]); //gtuniqtrees.txt
@@ -80,8 +81,9 @@ int calcCostForST(int & arg_counter, char* argv[], int & N, Node * newnode)
         pushToArray(newnodeGT, tailGT, arGT);
         getRanks(newnodeGT, tailGT, arGT);
         getDescTaxa(newnodeGT, N);
-
-        cost += totalNumExtraLineages(N, newnode, newnodeGT);
+        
+//        cout << totalNumExtraLineages(N, newnode, newnodeGT) << endl;
+        cost += totalNumExtraLineages(N, v, newnodeGT);
 
         delete [] arGT;
 
@@ -102,6 +104,7 @@ void searchCandidateSpTreeTopology(int &  arg_counter, char* argv[])
     int N = getNumberOfTaxa(arg_counter, argv, newnode);
     double * s_times = new double [N-1];
     double * s = new double [N-2];
+    vector <Node *> v;
     int ** ar_y = new int * [N];
     for (int i = 0; i < N; i++) ar_y[i] = new int [N];
 
@@ -111,9 +114,9 @@ void searchCandidateSpTreeTopology(int &  arg_counter, char* argv[])
             ar_y[i][j] = 0;
         }
 
-    speciesTreeProcessing(newnode, N, s_times, s, ar_y);
+    speciesTreeProcessing(newnode, N, s_times, s, v, ar_y);
 
-    fout << calcCostForST(arg_counter, argv, N, newnode) << endl;
+    fout << calcCostForST(arg_counter, argv, N, v) << endl;
 
     for(int i = 0; i < N; ++i)
     {

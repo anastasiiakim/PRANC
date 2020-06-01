@@ -26,9 +26,9 @@ void getRanks(Node* newnode, int & tail, Node ** ar);
 Node * getNodeFromRank (Node * p, int rankValueGT);
 void getTaxa (Node * p, std::stack <Node *> & allTaxa);
 
-Node * mrcaST (Node * p, Node * rch, Node * lch);
+Node * mrcaST (Node * rch, Node * lch);
 Node * mrcaST2 (Node * p, Node * tp, std::string v);
-Node * getMrca(Node * p, std::stack <Node * > & stk);
+Node * getMrca(vector <Node *> vlabels, std::stack <Node * > & stk);
 
 void writeRankedTreeTopology(Node * p, int N, ofstream & file);
 void storeLabels (Node * p, int N, string * ar, int & i);
@@ -41,11 +41,11 @@ void getPathMatchRank(Node * &  p, int rank_val);
 
 int * getNextHistory (int * ar, int * ar_orig, int n, int idx, int & numb);
 void arrayFreq(int * arr, int * res, int n);
-void get_hseq(int * arseq, Node * nodeGT, Node * nodeST, int n);
+void get_hseq(int * arseq, Node * nodeGT, vector <Node *> v, int n);
 void reverseArraySort(int * arseq, int n);
 
 void getDescTaxa(Node * node, int N);
-void returnMrca(Node * nodeST, Node * nodeGT, int n, Node ** ar);
+void returnMrca(vector <Node *> v, Node * nodeGT, int n, Node ** ar);
 void get_node(int * rank_hist, int ** temp, int n, Node ** ar);
 
 void calc_k_ijz (int ***k, int n, int * m, int ** y, int ** ar_r);
@@ -56,22 +56,23 @@ double factorial (int num);
 double calcBinomCoef (int n, int k);
 
 void storeLabels(int n, int & i, string* str, Node * p);
-void getS(Node * p, double * s);
+void getS(Node * p, double * s, vector <Node *> & v);
 
 double lambda_ij (int i, int j, int *** k);
 double invPartialCoal(int j);
 double conditionalProbability(int i, int * m_i, int *** array_k, double * s); // min i = 2 since l[i-2] exists
 void getInvPartialCoal(double * ar, int N);
-double geneTreeProbability(int * m, int *** k, double * s, double * coal, int n);
+double geneTreeProbability(int * m, int *** k, double * s, vector <Node *> vlabels, double * coal, int n);
 
-double getGeneTreeProb(int N, double * s,  Node * newnode, Node * newnodeGT, int ** ar_y, double * array_invcoal, Node ** arMrca, int ** ar_rankns, int ***k);
+double getGeneTreeProb(int N, double * s, vector <Node *> vlabels, Node * newnodeGT, int ** ar_y, double * array_invcoal, Node ** arMrca, int ** ar_rankns, int ***k);
 
 
 
 int getNumberOfTaxa(int & arg_counter, char* argv[], Node* &newnode);
-void speciesTreeProcessing(Node* newnode, int & N, double* s_times, double* s, int** ar_y);
-double calcRankedProb(int & arg_counter, char* argv[], int & N, Node * newnode, double* s, int** ar_y);
+void speciesTreeProcessing(Node* newnode, int & N, double* s_times, double* s, vector <Node *> & vlabels, int** ar_y);
+double calcRankedProb(int & arg_counter, char* argv[], int & N, double* s, vector <Node *> vlabels, int** ar_y);
 void calcProbsRankedGtInput(int &  arg_counter, char* argv[]);
+void outputCoalIntervals(int &  arg_counter, char* argv[]);
 
 
 #endif //  PM_H

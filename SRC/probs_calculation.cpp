@@ -57,13 +57,15 @@ void distFromRoot (Node * p)
     p -> left -> distFrRoot = p -> distFrRoot + p -> left -> length;
     p -> right -> parent = p;
     p -> left -> parent = p;
+    p -> right -> original_parent = p;
+    p -> left -> original_parent = p;
+
 
     distFromRoot(p -> right);
     distFromRoot(p -> left);
   }
   else // for leaves
   {
-    p -> outdegree = 0;
     p -> population = 1;
   }
 
@@ -122,7 +124,7 @@ void deleteTree (Node *  p)
 
   if(p -> left != NULL)
   {
-    deleteTree(p -> left);
+      deleteTree(p -> left);
   }
 
   if(p -> right != NULL)
@@ -273,75 +275,81 @@ void getTaxa (Node * p, std::stack <Node *> & allTaxa)
   }
   else
   {
-    allTaxa.push(p);
+     allTaxa.push(p);
   }
 }
 
 
-Node * mrcaST (Node * p, Node * rch, Node * lch)
+
+Node * mrcaST (Node * first, Node * second)
 {
-  if(p == NULL) return NULL;
-  if(p -> label == rch -> label || p -> label == lch -> label)
-  {
-    return p;
-  }
-  else
-  {
-    Node * r = mrcaST(p -> right, rch, lch);
-    Node * l = mrcaST(p -> left, rch, lch);
-
-    if(l!=NULL && r!=NULL)
+    if(first -> rank == 0)
+        first = first -> original_parent;
+    if(second -> rank == 0)
+        second = second -> original_parent;
+   // cout << "origihnal " << first -> rank << " " << second -> rank << endl;
+    while(true)
     {
-      return p;
+        if(first -> rank > second -> rank)
+        {
+            first = first -> original_parent;
+        }
+        else if(first -> rank < second -> rank)
+        {
+            second = second -> original_parent;
+        }
+        else if(first -> rank == second -> rank)
+        {
+            return first;
+        }
+        else
+            break;
     }
-    else
-    {
-      if(l!=NULL)
-      {
-        return l;
-      }
-      return r;
-    }
-  }
-}
-
-Node * mrcaST2 (Node * p, Node * tp, std::string v)
-{
-  if(p == NULL) return NULL;
-  if( p == tp || p -> label == v) return p;
-  else
-  {
-    Node * l = mrcaST2(p -> left, tp, v);
-    Node * r = mrcaST2(p -> right, tp, v);
-
-    if(l&&r) return p;
-    else
-    {
-      if(l) return l;
-      return r;
-    }
-  }
-
+    return first;
 }
 
 
-
-Node * getMrca(Node * p, std::stack <Node * > & stk)
+Node * getMrca(vector <Node *> vlabels, std::stack <Node * > & stk)
 {
   Node * a = stk.top();
   stk.pop();
   Node * b = stk.top();
   stk.pop();
-  Node * ptemp = mrcaST(p, a, b);
+ // cout << "lbl: " << a -> label << " " << a->debug_name << " " << b -> label << " " << b->debug_name << " vsize " << vlabels.size() << endl;
+  for(int i = 0; i < vlabels.size(); ++i)
+  {
+      if((a->label).compare(vlabels[i] -> label) == 0)
+    {
+        a = vlabels[i];
+      //  cout << "a " << a -> debug_name << " " << a->original_parent->rank << endl;
+    }
+    if((b->label).compare(vlabels[i] -> label) == 0)
+    {
+        b = vlabels[i];
+    //    cout << "b " << b -> debug_name << " " << b -> original_parent->rank << endl;
+    }
+  }
+ // cout << "exit for loop" << endl;
+  Node * ptemp = mrcaST(a, b);
   while(!stk.empty())
   {
     if(ptemp -> rank == 1) return ptemp;
     Node * t = stk.top();
     stk.pop();
-    ptemp = mrcaST2(p, ptemp, t -> label);
+   // cout << "t lbl: " << t -> label << endl;
+    for(int i = 0; i < vlabels.size(); ++i)
+    {
+        
+        if((t->label).compare(vlabels[i] -> label) == 0)
+        {
+            t = vlabels[i];
+        }
+    }
+    ptemp = mrcaST(ptemp, t);
   }
   return ptemp;
 }
+
 
 void storeLabels (Node * p, int N, string * ar, int & i)
 {
@@ -502,14 +510,14 @@ void arrayFreq(int * arr, int * res, int n)
 }
 
 
-void get_hseq(int * arseq, Node * nodeGT, Node * nodeST, int n)
+void get_hseq(int * arseq, Node * nodeGT, vector <Node *> v, int n)
 {
   arseq[0] = 1;
   for(int i = 2; i < n; ++i)
   {
     std::stack <Node *> allTaxa;
     getTaxa(getNodeFromRank(nodeGT, i), allTaxa);
-    Node * mrcanode  = getMrca(nodeST, allTaxa);
+    Node * mrcanode  = getMrca(v, allTaxa);
     if (mrcanode -> rank < i)
     {
       arseq[i-1] = mrcanode -> rank;
@@ -554,13 +562,13 @@ void getDescTaxa(Node * p, int N)
 }
 
 
-void returnMrca(Node * nodeST, Node * nodeGT, int n, Node ** ar)
+void returnMrca(vector <Node *> v, Node * nodeGT, int n, Node ** ar)
 {
   for(int i = 1; i < n; ++i)
   {
     std::stack <Node *> allTaxa;
     getTaxa(getNodeFromRank(nodeGT, i), allTaxa);
-    Node * mrcanode  = getMrca(nodeST, allTaxa);
+    Node * mrcanode  = getMrca(v, allTaxa);
     ar[i-1] = mrcanode;
   }
 }
@@ -577,7 +585,9 @@ void get_node(int * rank_hist, int ** temp, int n, Node ** ar)
     getPathMatchRank(mrcanode, rank_hist[i-1]);
     if (tmp != mrcanode -> rank) j = 1;
 
+   // cout << mrcanode->rank << " j: " << j << " r: " << rank_hist[i-1] << " pop: " << mrcanode -> population <<endl;
     temp[mrcanode->rank-1][j-1] = mrcanode -> population;
+   // cout << "temp[" << mrcanode->rank-1 << "][" << j-1 << "] = " <<  temp[mrcanode->rank-1][j-1] << endl;
     tmp = mrcanode -> rank;
     ++j;
   }
@@ -631,9 +641,9 @@ void writeTree(Node* root)
   cout << " label " << root -> label;
   cout << " desctaxa " << root -> desctaxa;
   cout << endl;
-  //	cout << " time " << root -> time;
+  cout << " length " << root -> length;
   //	cout << " population " << root -> population << endl;
-  //	cout << " outdegree " << root -> outdegree << endl;
+  cout << " outdegree " << root -> outdegree << endl;
 
 
   if (root->left) writeTree(root->left);
@@ -705,13 +715,17 @@ void storeLabels(int n, int & i, string* str, Node * p)
   }
 }
 
-void getS(Node * p, double * s)
+void getS(Node * p, double * s, vector <Node *> & vlabels)
 {
   if(p -> label.size() == 0)
   {
     s[p -> rank - 1] = p -> time;
-    getS(p -> right, s);
-    getS(p -> left, s);
+    getS(p -> right, s, vlabels);
+    getS(p -> left, s, vlabels);
+  }
+  else 
+  {
+     vlabels.push_back(p);
   }
 }
 /*
@@ -744,6 +758,7 @@ double lambda_ij (int i, int j, int *** k)
   {
     res += calcBinomCoef(k[i][j][z], 2);
   }
+//  cout << i << " " << j << " " << res << endl;
   return res;
 }
 
@@ -797,22 +812,22 @@ double geneTreeProbability(int * m, int *** k, double * s, double * coal, int n)
 
 
 
-double getGeneTreeProb(int N, double * s,  Node * newnode, Node * newnodeGT, int ** ar_y, double * array_invcoal, Node ** arMrca, int ** ar_rankns, int ***k)
+double getGeneTreeProb(int N, double * s, vector <Node *> vlabels, Node * newnodeGT, int ** ar_y, double * array_invcoal, Node ** arMrca, int ** ar_rankns, int ***k)
 {
 
   double arhists[MAX_EXPONENT_VALUE];
   for(int i = 0; i < MAX_EXPONENT_VALUE; ++i)
     arhists[i] = 0.;
 
-  returnMrca(newnode, newnodeGT, N, arMrca);
+  returnMrca(vlabels, newnodeGT, N, arMrca);
 
   int * arRankHistory = new int [N-1];
-  get_hseq(arRankHistory, newnodeGT, newnode, N);
+  get_hseq(arRankHistory, newnodeGT, vlabels, N);
   reverseArraySort(arRankHistory, N);
-  //   cout << "Max Ranked History" << endl;
-  //  for(int i = 0; i < N-1; ++i) cout << arRankHistory[i] << " ";
-  //  cout << endl;
-
+  /*   cout << "Max Ranked History" << endl;
+    for(int i = 0; i < N-1; ++i) cout << arRankHistory[i] << " ";
+    cout << endl;
+*/
   int *  arRankHistoryCopy = new int[N-1];
   for(int i = 0; i < N-1; ++i)
   {
@@ -820,25 +835,54 @@ double getGeneTreeProb(int N, double * s,  Node * newnode, Node * newnodeGT, int
   }
   int * m_i = new int[N-1];
   arrayFreq(arRankHistoryCopy, m_i, N-1);//1st arg changes after running this func
-  /*    cout << "m_i[i]: " << endl;
+
+ /*     cout << "m_i[i]: " << endl;
         for(int i=0; i< N-1; ++i)
         cout << m_i[i] << " ";
         cout << endl;
-        cout <<"rank_hist " << endl;
+      cout <<"rank_hist " << endl;
         for(int i = 0; i < N-1; ++i)
         {
         cout  << arRankHistory[i] << " ";
         }
-        cout << endl; */
+        cout << endl; 
+  
+    for(int j = 0; j < N - 1; ++j)
+    {
+        if(arMrca[j]->rank != 0)
+      cout << "armrca[" << j << "] = " << arMrca[j]->rank << endl;
+    }
+*/
+
   int max_m_i = *max_element(m_i, m_i+N-1);
   get_node(arRankHistory, ar_rankns, N, arMrca);
-  for(int i = 0; i < N+1; i++)
+  /*
+ for(int i = 0; i < N-1; ++i)
+  {
+    for(int j = 0; j < N - 1; ++j)
+    {
+        if(ar_rankns[i][j] != 0)
+      cout << "y[" << i << "][" << j << "] = " << ar_rankns[i][j] << endl;
+    }
+  }*/
+
+ for(int i = 0; i < N+1; i++)
     for(int j = 0; j < N; ++j)
       for(int z = 0; z < N+1 ; ++z)
       {
         k[i][j][z] = 0;
       }
   calc_k_ijz(k, N, m_i, ar_y, ar_rankns);//*, m_i);
+ 
+/*
+  for(int i = 0; i < N+1; i++)
+    for(int j = 0; j < N; ++j)
+      for(int z = 0; z < N+1 ; ++z)
+      {
+          if(k[i][j][z] != 0)
+            cout << "k[" << i << "][" << j << "][" << z << "] = " << k[i][j][z] << endl;
+      }
+*/
   double onehistprob = geneTreeProbability(m_i, k, s, array_invcoal, N);
   double prob_val = onehistprob;
 
@@ -852,16 +896,15 @@ double getGeneTreeProb(int N, double * s,  Node * newnode, Node * newnodeGT, int
   int history_counter = 1;
   int numb = 0;
   int * next_history;
-
   while(*(arRHcopy + N - 2) != 1)
   {
     next_history = getNextHistory (arRHcopy, arRankHistory, N, history_counter, numb);
 
-    /*             cout << "---------- Next Label history ---------- " << endl;
+               /*  cout << "---------- Next Label history ---------- " << endl;
                    for(int i = 0; i < N - 1; ++i)
                    cout << next_history[i] << " ";
                    cout << endl;
-                   */
+                 */  
     //repeat
     for(int i = 0; i < N-1; ++i)
       arRankHistoryCopy[i] = next_history[i];
@@ -880,8 +923,46 @@ double getGeneTreeProb(int N, double * s,  Node * newnode, Node * newnodeGT, int
         }
       }
     }
-    calc_k_ijz(k, N, m_i, ar_y, ar_rankns);//*, m_i);
-    onehistprob = geneTreeProbability(m_i, k, s, array_invcoal, N);
+
+  /*    cout << "m_i[i]: " << endl;
+        for(int i=0; i< N-1; ++i)
+        cout << m_i[i] << " ";
+        cout << endl;
+      cout <<"rank_hist " << endl;
+        for(int i = 0; i < N-1; ++i)
+        {
+        cout  << arRankHistory[i] << " ";
+        }
+        cout << endl; 
+  
+    for(int j = 0; j < N - 1; ++j)
+    {
+        if(arMrca[j]->rank != 0)
+      cout << "armrca[" << j << "] = " << arMrca[j]->rank << endl;
+        if(arMrca[j] ->label.size() !=0)
+      cout << "armrca[" << j << "] = " << arMrca[j]->label << endl;
+    }
+
+
+ for(int i = 0; i < N-1; ++i)
+  {
+    for(int j = 0; j < N - 1; ++j)
+    {
+        if(ar_rankns[i][j] != 0)
+      cout << "y[" << i << "][" << j << "] = " << ar_rankns[i][j] << endl;
+    }
+  }
+i*/
+    calc_k_ijz(k, N, m_i, ar_y, ar_rankns);/*, m_i);
+   for(int i = 0; i < N+1; i++)
+    for(int j = 0; j < N; ++j)
+      for(int z = 0; z < N+1 ; ++z)
+      {
+          if(k[i][j][z] != 0)
+            cout << "k[" << i << "][" << j << "][" << z << "] = " << k[i][j][z] << endl;
+      }
+*/
+   onehistprob = geneTreeProbability(m_i, k, s, array_invcoal, N);
     prob_val += onehistprob;
 
     if(onehistprob != 0 && ((int) floor(fabs(log2(fabs(onehistprob))))) < MAX_EXPONENT_VALUE)
@@ -931,19 +1012,28 @@ int getNumberOfTaxa(int & arg_counter, char* argv[], Node*& newnode)
   return lbl;
 }
 
-void speciesTreeProcessing(Node* newnode, int & N, double* s_times, double * s, int** ar_y)
+void speciesTreeProcessing(Node* newnode, int & N, double* s_times, double * s, vector <Node *> & vlabels, int** ar_y)
 {
   Node ** ar = new Node * [N];
   int tail = 0;
   pushToArray(newnode, tail, ar);
-
   getRanks(newnode, tail, ar);
+ 
+  if(vlabels.size() != 0)
+  {
+    while (!vlabels.empty())
+    {
+         vlabels.pop_back();
+    }
+  }
 
-  getS(newnode, s_times);
+  getS(newnode, s_times, vlabels);
+ 
   for(int j = 2; j < N; ++j)
   {
     s[j-2] = s_times[j-2] - s_times[j-1];
-    cout << "s[" << j << "] = " << s[j-2] << endl;
+   // cout << "s[" << j << "] = " << s[j-2] << endl;
+    //cout << "s[" << j << "] = " << s[j-2] << endl;
   }
   int itemp = 0;
   double * arDistFrRoot = new double [N];
@@ -953,6 +1043,8 @@ void speciesTreeProcessing(Node* newnode, int & N, double* s_times, double * s, 
   //    ofstream stfile("STtopo.txt");
   //    writeRankedTreeTopology(newnode, N, stfile);
   //    stfile.close();
+
+// writeTree(newnode);
 
   size_t maxQue = (size_t) N*(1+N)/2;
   makeBeadedTree(newnode, maxQue);
@@ -965,7 +1057,7 @@ void speciesTreeProcessing(Node* newnode, int & N, double* s_times, double * s, 
 
 
 
-double calcRankedProb(int & arg_counter, char* argv[], int & N, Node * newnode, double* s, int** ar_y)
+double calcRankedProb(int & arg_counter, char* argv[], int & N, double* s, vector <Node *> vlabels, int** ar_y)
 {
   string strGT="";
   string strTops="";
@@ -1016,7 +1108,7 @@ double calcRankedProb(int & arg_counter, char* argv[], int & N, Node * newnode, 
     pushToArray(newnodeGT, tailGT, arGT);
     getRanks(newnodeGT, tailGT, arGT);
     getDescTaxa(newnodeGT, N);
-    one_gt_prob = getGeneTreeProb(N, s,  newnode, newnodeGT, ar_y, array_invcoal, arMrca, ar_rankns, k);
+    one_gt_prob = getGeneTreeProb(N, s, vlabels, newnodeGT, ar_y, array_invcoal, arMrca, ar_rankns, k);
     finprobGT  << one_gt_prob <<  '\t' << strTops << '\n';
     prec_total_prob += one_gt_prob;
 
@@ -1063,6 +1155,7 @@ void calcProbsRankedGtInput(int &  arg_counter, char* argv[])
 
   double * s_times = new double [N-1];
   double * s = new double [N-2];
+  vector <Node *> vlabels;
   int ** ar_y = new int * [N];
   for (int i = 0; i < N; i++) ar_y[i] = new int [N];
 
@@ -1071,9 +1164,8 @@ void calcProbsRankedGtInput(int &  arg_counter, char* argv[])
     {
       ar_y[i][j] = 0;
     }
-  speciesTreeProcessing(newnode, N, s_times, s, ar_y);
-
-  res = calcRankedProb(arg_counter, argv, N, newnode, s, ar_y);
+  speciesTreeProcessing(newnode, N, s_times, s, vlabels, ar_y);
+  res = calcRankedProb(arg_counter, argv, N, s, vlabels, ar_y);
   cout << "Total: " << res << endl;
   for(int i = 0; i < N; ++i)
   {
@@ -1085,5 +1177,57 @@ void calcProbsRankedGtInput(int &  arg_counter, char* argv[])
   deleteTree(newnode);
 }
 
+/*
 
+void outputCoalIntervals(int &  arg_counter, char* argv[])
+{
+  Node * newnode;
+  double res = 0.;
+  int N = getNumberOfTaxa(arg_counter, argv, newnode);
 
+  double * s_times = new double [N-1];
+  double * s = new double [N-2];
+  vector <Node *> vlabels;
+  int ** ar_y = new int * [N];
+  for (int i = 0; i < N; i++) ar_y[i] = new int [N];
+
+  for (int i = 0; i < N; ++i)
+    for (int j = 0; j < N; ++j)
+    {
+      ar_y[i][j] = 0;
+    }
+
+  Node ** ar = new Node * [N];
+  int tail = 0;
+  pushToArray(newnode, tail, ar);
+  getRanks(newnode, tail, ar);
+ 
+  if(vlabels.size() != 0)
+  {
+    while (!vlabels.empty())
+    {
+         vlabels.pop_back();
+    }
+  }
+
+  getS(newnode, s_times, vlabels);
+ 
+  for(int j = 2; j < N; ++j)
+  {
+    s[j-2] = s_times[j-2] - s_times[j-1];
+    cout << setprecision(6) << s[j-2] << ' ';
+  }
+  cout << endl;
+  delete[] ar;
+
+  for(int i = 0; i < N; ++i)
+  {
+    delete[] ar_y[i];
+  }
+  delete[] ar_y;
+  delete[] s_times;
+  delete[] s;
+  deleteTree(newnode);
+}
+
+*/

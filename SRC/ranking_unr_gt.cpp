@@ -339,7 +339,7 @@ void assignRanks(Node * newnodeGT, vector<int> v)
 }
 
 
-double searchOverRanks(Node * newnode, Node * newnodeGT, int Numtaxa, int ** ar_y, double * s,  ofstream & file, double * array_invcoal, Node ** arMrca, int ** ar_rankns, int *** k)
+double searchOverRanks(Node * newnodeGT, int Numtaxa, int ** ar_y, double * s, vector <Node *> v,  ofstream & file, double * array_invcoal, Node ** arMrca, int ** ar_rankns, int *** k)
 {
     double probability = 0.;
     int prod = 1;
@@ -358,17 +358,15 @@ double searchOverRanks(Node * newnode, Node * newnodeGT, int Numtaxa, int ** ar_
         //  string temp_str = "";
         // temp_str = getGTtopology(newnodeGT, Numtaxa);
         //  cout << temp_str << endl;
-        double probabilitytmp = getGeneTreeProb(Numtaxa, s, newnode, newnodeGT, ar_y, array_invcoal, arMrca, ar_rankns, k);
-        cout << probabilitytmp << endl;
+        double probabilitytmp = getGeneTreeProb(Numtaxa, s, v, newnodeGT, ar_y, array_invcoal, arMrca, ar_rankns, k);
         probability += probabilitytmp;
-
         file << getGTtopology(newnodeGT, Numtaxa) << " " << setprecision(15) << probabilitytmp << endl;
     }
     return probability;
 }
 
 
-void calcUnrankedProb(int & arg_counter, char * argv[], int & N, Node* newnode, double*s, int** ar_y)
+void calcUnrankedProb(int & arg_counter, char * argv[], int & N, double*s, vector <Node *> v, int** ar_y)
 {
     string strGT="";
     ifstream finGT(argv[arg_counter]); //"gtuniqtrees.txt"
@@ -424,7 +422,7 @@ void calcUnrankedProb(int & arg_counter, char * argv[], int & N, Node* newnode, 
         newnodeGT = stkGTunr.top();
         getDescTaxa(newnodeGT, N);
         newnodeGT -> rank = 1;
-        oneGTPr = searchOverRanks(newnode, newnodeGT, N, ar_y, s, outGT, array_invcoal, arMrca, ar_rankns, k);
+        oneGTPr = searchOverRanks(newnodeGT, N, ar_y, s, v, outGT, array_invcoal, arMrca, ar_rankns, k);
         outUnr << strGT << '\t' << oneGTPr << endl;
         TOTAL_PROBABILITY += oneGTPr;
         delete [] ar_strlbl;
@@ -461,6 +459,7 @@ void calcProbsUnrankedGtInput(int & arg_counter, char * argv[])
     int N = getNumberOfTaxa(arg_counter, argv, newnode);
     double * s_times = new double [N-1];
     double * s = new double [N-2];
+    vector <Node *> v;
     int ** ar_y = new int * [N];
     for (int i = 0; i < N; i++) ar_y[i] = new int [N];
 
@@ -470,8 +469,8 @@ void calcProbsUnrankedGtInput(int & arg_counter, char * argv[])
             ar_y[i][j] = 0;
         }
 
-    speciesTreeProcessing(newnode, N, s_times, s, ar_y);
-    calcUnrankedProb(arg_counter, argv, N, newnode, s, ar_y);
+    speciesTreeProcessing(newnode, N, s_times, s, v, ar_y);
+    calcUnrankedProb(arg_counter, argv, N, s, v, ar_y);
     for(int i = 0; i < N; ++i)
     {
         delete[] ar_y[i];

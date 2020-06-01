@@ -10,6 +10,7 @@ struct Node
     Node * left;
     Node * right;
     Node * parent;
+    Node * original_parent;
     Node ()
     {
         debug_name = st_count;
@@ -17,6 +18,7 @@ struct Node
         right = NULL;
         left = NULL;
         parent = NULL;
+        original_parent = NULL;
         label = "";
         desctaxa = "";
         rank = 0;
@@ -24,6 +26,7 @@ struct Node
         time = 0.;
         distFrRoot = 0.;
         leavesnum = 0.;
+        outdegree = 0.;
         //  printf("nodeWithName %d created \n", debug_name);
     };
     Node (string _label)
@@ -33,6 +36,7 @@ struct Node
         right = NULL;
         left = NULL;
         parent = NULL;
+        original_parent = NULL;
         label = _label;
         desctaxa = "";
         rank = 0;
@@ -40,7 +44,9 @@ struct Node
         time = 0.;
         distFrRoot = 0.;
         leavesnum = 0.;
-        
+        outdegree = 0.;
+        int instance_count = 0;
+
         //  printf("nodeWithName %d created \n", debug_name);
     };
     Node (Node *pL, Node *pR)
@@ -48,6 +54,7 @@ struct Node
         debug_name = st_count;
         st_count++;
         parent = NULL;
+        original_parent = NULL;
         label = "";
         desctaxa = "";
         rank = 0;
@@ -55,10 +62,12 @@ struct Node
         time = 0.;
         distFrRoot = 0.;
         leavesnum = 0.;
+        outdegree = 0.;
         left = pL;
         right = pR;
         pL->parent = this;
         pR->parent = this;
+        int instance_count = 0; 
         //  printf("nodeWithName %d created \n", debug_name);
     };
 
@@ -73,6 +82,8 @@ struct Node
     int outdegree;
     int leavesnum;
     int leaf_id;
+    int instance_count;
+    
 };
 
 

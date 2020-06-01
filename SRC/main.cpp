@@ -15,10 +15,13 @@
 #include "min_ancient_coal.h"
 #include "write_ranked_tree.h"
 #include "maxlike.h"
+#include "maxlike_brent.h"
 #include "symbolic.h"
 #include "get_unranked_topology.h"
 #include "get_ranked_topology.h"
 #include "get_greedy_consensus.h"
+#include "rank_distance.h"
+#include "branch_distance.h"
 
 using namespace std;
 
@@ -53,6 +56,11 @@ int main(int argc, char * argv[])
         {
             ++arg_counter;
             calcLikeWithNNI(arg_counter, argv);
+        }     
+        else if(strcmp(argv[arg_counter],"-like_nni_brent") == 0)
+        {
+            ++arg_counter;
+            brent_calcLikeWithNNI(arg_counter, argv);
         }
         else if(strcmp(argv[arg_counter],"-mac") == 0)
         {
@@ -84,7 +92,21 @@ int main(int argc, char * argv[])
             ++arg_counter;
             getConsensusTree(arg_counter, argv);
         }
-
+        else if(strcmp(argv[arg_counter],"-rank_dist") == 0)
+        {
+            ++arg_counter;
+            getRankDistance(arg_counter, argv);
+        }
+        else if(strcmp(argv[arg_counter],"-coal_ints") == 0)
+        {
+            ++arg_counter;
+            outputCoalIntervals(arg_counter, argv);
+        }
+        else if(strcmp(argv[arg_counter],"-br_len") == 0)
+        {
+            ++arg_counter;
+            getMSEBranchDistance(arg_counter, argv);
+        }
         else return 0;
     }
     return 0;

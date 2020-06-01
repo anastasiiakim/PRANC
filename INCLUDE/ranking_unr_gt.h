@@ -32,10 +32,10 @@ Node * getNodeFromName(Node * p, int name_val);
 //void getNodeFromName(Node * p, Node * & r, int name);
 
 void assignRanks(Node * p, vector<int> v);
-double searchOverRanks(Node * newnode, Node * newnodeGT, int Numtaxa, int ** ar_y, double * s, ofstream & file, double * array_invcoal, Node ** arMrca, int ** ar_rankns, int *** k);
+double searchOverRanks(Node * newnodeGT, int Numtaxa, int ** ar_y, double * s, vector <Node *> v, ofstream & file, double * array_invcoal, Node ** arMrca, int ** ar_rankns, int *** k);
 
 
-void calcUnrankedProb(int & arg_counter, char * argv[], int & N, Node* newnode, double*s, int** ar_y);
+void calcUnrankedProb(int & arg_counter, char * argv[], int & N, double * s, vector <Node *> v, int** ar_y);
 void calcProbsUnrankedGtInput(int & arg_counter, char * argv[]);
 
 #endif //RU

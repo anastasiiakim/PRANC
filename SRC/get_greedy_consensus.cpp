@@ -12,8 +12,10 @@
 #include "write_ranked_tree.h"
 #include "get_greedy_consensus.h"
 #include <sstream>
+#include <chrono> 
 
 using namespace std;
+using namespace chrono; 
 
 string idToStr(int id)
 {
@@ -36,61 +38,47 @@ int strToId(string str)
     cout << idToStr(id) << endl;
     return id;
 }
-/*
-struct BagOfNodes
-{
-    vector<Node*> m;
-    // Constructor
 
-    BagOfNodes(){};
-    BagOfNodes(vector<string> str)
-    {
-        for(unsigned i = 0; i < str.size(); ++i)
-        {
-            m.push_back(new Node(str[i]));
-        }
-    };
-    BagOfNodes(vector<string> str, const BagOfNodes & b)
-    {
-        for(unsigned i = 0; i < str.size(); ++i)
-        {
-            for(unsigned j = 0; j < b.m.size(); ++j)
-            {
-                if (b.m[j]->label == str[i])
-                {
-                    m.push_back(b.m[j]);
-                    break;
-                } 
-            }
-        }
-    };
-    void clip(Node * rule)
-    {
-        auto it = m.end();
-        it = find(m.begin(), m.end(), rule->left);
-        if (it != m.end()) m.erase(it);
-        it = find(m.begin(), m.end(), rule->right);
-        if (it != m.end())
-        {
-            m.erase(it);
-            m.push_back(rule);
-        }
-    };
-};
-*/
-
-Node* makeTree(vector<vector<string>> strs)
-{  
+Node* makeTree(vector<vector<string>> strs, int & correct_tree)
+{ 
     BagOfNodes tmp[strs.size()];
     tmp[strs.size()-1] = BagOfNodes(strs[strs.size()-1]);
+    vector<Node*> history = tmp[strs.size()-1].m;
+
     for(int i = 0; i < strs.size()-1; ++i)
     {
         tmp[i] = BagOfNodes(strs[i], tmp[strs.size()-1]);
     }
+
+    /*  
+        for(int i = 0; i < strs.size()-1; ++i) 
+        {
+        for (int j = 0; j < tmp[i].m.size(); ++j)
+        {
+        cout<< tmp[i].m[j]->label << " ";
+        }
+        cout << endl;
+        }
+
+*/
+
     for(int i = 0; i < strs.size()-1; ++i)
     {
-        if(tmp[i].m.size() > 2) cout << "ERROR!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n";
+        // clip only two nodes, because tree is binary
+        if(tmp[i].m.size() > 2) 
+        {
+            cout << i << "--ERROR!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n";
+            correct_tree = 0;
+            // for(int j = 0; j < tmp[i].m.size(); ++j) 
+            //     cout << tmp[i].m[j]->label << endl;
+            for(auto it = history.begin(); it != history.end(); ++it)
+            {
+                delete *it;
+            }
+            return NULL;
+        }
         Node* p = new Node(tmp[i].m[0], tmp[i].m[1]);
+        history.push_back(p);
         for(int j = i+1; j < strs.size(); ++j)
         {
             tmp[j].clip(p);
@@ -98,7 +86,17 @@ Node* makeTree(vector<vector<string>> strs)
     }
 
     int i = strs.size()-1;
-    if(tmp[i].m.size() > 2) cout << "ERROR!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n";
+    if(tmp[i].m.size() > 2) 
+    {
+        cout << i << " ERROR!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n";
+        correct_tree = 0;
+        for(auto it = history.begin(); it != history.end(); ++it)
+        {
+            delete *it;
+        }
+
+        return NULL;
+    }
     return new Node(tmp[i].m[0], tmp[i].m[1]);
 }
 
@@ -120,49 +118,6 @@ bool sortVectBySize(const pair<string, int> & a, const pair<string, int> &b) //T
 
 
 
-
-
-
-ret_t visit(const int & row, const int & col, const unsigned long & freq, unsigned nsize, unsigned long a[][2], vector<int> path)
-{
-    // printf("%d  %d  %3lu \n", row, col, freq);
-    ret_t ret1;//r
-    ret_t ret2;//d
-    if(col < nsize-1)
-    {
-        ret1 = visit(row, col+1, freq, nsize, a, path);
-        bool cmp = true;
-        for (unsigned i = 0; i < path.size(); ++i)
-            if(!cmpt(a[path[i]][0], a[col][0]))
-            {
-                cmp = false;
-                break;
-            }
-        if (cmp)
-        {
-            path.push_back(col);
-            ret2 = visit(col, col+1, freq + a[col][1], nsize, a, path);
-
-            if (ret1.first < ret2.first) 
-            {
-                return ret2;
-            }
-        }
-
-        return ret1;
-    }
-    else
-    {
-        return ret_t(freq, path);
-    }
-}
-
-
-
-
-
-
-
 void getConsensusTree(int &  arg_counter, char* argv[])
 {
     string str;
@@ -172,15 +127,16 @@ void getConsensusTree(int &  arg_counter, char* argv[])
     getline(gt_file, str, ';');
     int indicator = 0;
     int lbl = countNumberTaxa(indicator, str);
+   // cout << "indicator: " << indicator << endl;
     int N = lbl;
     int dummy = 0;
     gt_file.close();
 
     gt_file.open(argv[arg_counter]);
-    ofstream topo_file("outGreedyCons.txt");
+    arg_counter++;
 
     std::unordered_map <string, int> clpairs;
-    if(indicator == 0)
+    if(indicator == 0) //no branch lengths
     {
         while(getline(gt_file, str, ';'))
         {
@@ -294,8 +250,8 @@ void getConsensusTree(int &  arg_counter, char* argv[])
 
     for (int i = 0; i < vec.size(); i++)
     {
-        // cout << vec[i].first << ": " << vec[i].second << endl;
-        // cout << vec[i].first.size() << endl;
+        //cout << vec[i].first << ": " << vec[i].second << endl;
+        //cout << vec[i].first.size() << endl;
         if(vec[i].second != uniq[uj]) 
         {
             uniq.push_back(vec[i].second);
@@ -315,13 +271,14 @@ void getConsensusTree(int &  arg_counter, char* argv[])
         updstart = j;
     }
 
+   /* 
     //vector of sorted pairs by their occurence
-/* 
     for(int i = 0; i < vec.size(); i++)
     {
-        cout << vec[i].first << ": " << vec[i].second << endl;
+    cout << vec[i].first << ": " << vec[i].second << endl;
     }
-*/
+    */
+
 
     //search for a tree with the highest score
     unsigned long int a [vec.size()][2];
@@ -345,14 +302,13 @@ void getConsensusTree(int &  arg_counter, char* argv[])
             } 
             else
             { 
-                ss << c - 'A'; //if A,B,C,..not t
+                ss << c - 'A';//if A,B,C,..not t. IMPORTANT: if numtaxa < 10 then both t1,t2,.. and A,B,.. for taxa names ok; if numtaxa >=10 then names that contain more than one char like t1,t2 are not accepted and it is slower
+                //ss << c - 'A';//if A,B,C,..not t
             }   
-           
-//            if(vec[i].first[j] == '|') continue;
-//            a[i][0] = a[i][0] | (1 << (int) (vec[i].first[j] - 'A'));
 
         }
     }
+
 
     bool b[vec.size()][vec.size()];
     for(int i = 0; i < vec.size(); ++i)
@@ -360,119 +316,187 @@ void getConsensusTree(int &  arg_counter, char* argv[])
         for(int j = 0; j < vec.size(); ++j)
         { 
             b[i][j] = cmpt(a[i][0],a[j][0]);
-      //      cout << b[i][j] << ' ';
         }
-      //  cout << " freq: " << a[i][1] << endl;
     }
 
-    int row = 0;
-    int col = 1;
-    unsigned long int freq = a[0][1];
-    vector<int> path;
-    path.push_back(0);
-    ret_t visit_ret =  visit(row, col, freq, vec.size(), a, path);
-
-    string m[visit_ret.second.size()];
-  //  printf("Freq: %lu \n", visit_ret.first);
-    for (unsigned i = 0; i < visit_ret.second.size(); ++i) 
+    vector <vector<string>> res_vec;
+    vector <string> init_res_vec;
+    vector <int> m_index;
+    m_index.push_back(0);
+    m_index.push_back(1);
+    int idx = 0; 
+    int max_freq = a[0][1] + a[1][1];
+    init_res_vec.push_back(vec[0].first);
+    init_res_vec.push_back(vec[1].first);
+    for(int i = 2; i < vec.size(); ++i)
     {
-        m[i] = vec[visit_ret.second[i]].first.c_str();
- //       printf("%s %d\n",vec[visit_ret.second[i]].first.c_str(),vec[visit_ret.second[i]].second);
-    }
-
-
-    string temp = "";
-    sortStringsBySize(m, visit_ret.second.size());
-    unordered_map <int, int> mfreqs;
-    for (int i = 0; i < visit_ret.second.size(); ++i) 
-    {
-        int j = 0;
-        int jcount = 0;
-        string msep = "|";
-        string mtemp = m[i];
-        while(j < (int) mtemp.size())
+        idx = 0;
+        for(int j = 1; j < m_index.size(); ++j)
+        { 
+            if(b[m_index[j]][i] == 0) idx++;
+        }
+        if(idx == 0) 
         {
-            if(mtemp[j] == '|')
+            m_index.push_back(i);
+            max_freq += a[i][1];
+
+            init_res_vec.push_back(vec[i].first);
+        }
+    }
+
+    //cout << "MAX_FREQ: " << max_freq << endl;
+    res_vec.push_back(init_res_vec);
+
+    int deep_max = 0;
+    int counter = 0;
+    string str_top="";
+    string old_top="";
+    ofstream topo_file("outGreedyCons.txt");
+    ofstream freq_file("outGreedyConsFreqs.txt");
+
+    string s_temp = " ";
+    vector <string> vunique;
+    vector <int> res_vec_index;
+    for(int j = 0; j < res_vec[0].size(); ++j)
+    {
+        s_temp += res_vec[0][j];
+        s_temp += "-";
+    }
+    vunique.push_back(s_temp);
+    res_vec_index.push_back(0);
+
+    for (int global_i = 0; global_i < res_vec_index.size(); ++global_i) 
+    {
+        
+
+        int msize = res_vec[res_vec_index[global_i]].size();
+        string m[msize];
+
+        for(int j = 0; j < msize; ++j)
+        {   
+            m[j] = res_vec[res_vec_index[global_i]][j];
+        }
+
+
+
+        string temp = "";
+        sortStringsBySize(m, msize);
+        unordered_map <int, int> mfreqs;
+        for (int i = 0; i < msize; ++i) 
+        {
+            int j = 0;
+            int jcount = 0;
+            string msep = "|";
+            string mtemp = m[i];
+            while(j < (int) mtemp.size())
             {
-                ++jcount;
-            }
-
-            ++j;
-        }
-        if(mfreqs.count(jcount))
-        {
-            mfreqs[jcount]++;
-        }  
-        else
-        {
-            pair <int, int> temp (jcount, 1);
-            mfreqs.insert(temp);
-        }
-
-    }
-    /*
-       stack <int> mstack;
-       for (auto it = mfreqs.begin(); it != mfreqs.end(); ++it) 
-       {
-       cout << it->first << " " << it->second  << endl;
-       mstack.push(it->second);
-       }
-
-*/
-
-
-    vector<vector<string>> strs;
-    for (int i = 0; i < visit_ret.second.size(); ++i) 
-    {
-        strs.push_back(vector<string>());
-        temp = m[i];
-        int j = 0;
-
-        while(j < (int) temp.size())
-        {
-            if(((temp[j] >= 'a' && temp[j] <= 'z') || (temp[j] >= 'A' && temp[j] <= 'Z')) && ((j+1) < (int) temp.size()))
-            {
-
-                string strtemp;
-                strtemp += temp[j];
-                while(((j+1) < (int) temp.size()) &&  temp[j+1] != '|')
+                if(mtemp[j] == '|')
                 {
-                    strtemp += temp[j+1];
-                    ++j;
+                    ++jcount;
                 }
-          //      cout << m[i] << " ------ " << strtemp << endl;
-                strs[i].push_back(strtemp);
-                ++j;
 
+                ++j;
             }
+            if(mfreqs.count(jcount))
+            {
+                mfreqs[jcount]++;
+            }  
             else
             {
-                ++j;
+                pair <int, int> temp (jcount, 1);
+                mfreqs.insert(temp);
             }
 
         }
 
-    }
 
- /*   for (int i = 0; i < strs.size(); ++i) 
-    {
-        for (int j = 0; j < strs[i].size(); ++j)
+        vector<vector<string>> strs;
+        for (int i = 0; i < msize; ++i) 
         {
-            cout << strs[i][j] << " "; 
-        } 
-    cout << endl;
-    
-    }
-    */
+            strs.push_back(vector<string>());
+            temp = m[i];
+            int j = 0;
 
-    Node * tree = makeTree(strs);
-  //  writeTree(tree);
-    string finstr = "";
-    writeUnrankTreeIntoStr(tree, N, finstr);
-    deleteTree(tree);
-    topo_file << finstr << ";" << endl;
-    topo_file.close();
+            while(j < (int) temp.size())
+            {
+                if(((temp[j] >= 'a' && temp[j] <= 'z') || (temp[j] >= 'A' && temp[j] <= 'Z')) && ((j+1) < (int) temp.size()))
+                {
+
+                    string strtemp;
+                    strtemp += temp[j];
+                    while(((j+1) < (int) temp.size()) &&  temp[j+1] != '|')
+                    {
+                        strtemp += temp[j+1];
+                        ++j;
+                    }
+                    strs[i].push_back(strtemp);
+                    ++j;
+
+                }
+                else
+                {
+                    ++j;
+                }
+
+            }
+
+        }
+ 
+        int correct_tree = 1;
+        Node * tree = makeTree(strs, correct_tree);
+        string finstr = "";
+        if(correct_tree == 1)
+        {
+            writeUnrankTreeIntoStr(tree, N, finstr);
+            deleteTree(tree);
+
+            topo_file << finstr << ";" << endl;
+            freq_file << max_freq << " " << finstr << ";" << endl;
+          //  cout << max_freq << " " << finstr << ";" << endl;
+            }
+} 
+topo_file.close();
+freq_file.close();
+
 }
 
-
-
+BagOfNodes::BagOfNodes(vector<string> str)
+{
+    for(unsigned i = 0; i < str.size(); ++i)
+    {
+        m.push_back(new Node(str[i]));
+    }
+}
+BagOfNodes::BagOfNodes(vector<string> str, const BagOfNodes & b)
+{
+    for(unsigned i = 0; i < str.size(); ++i)
+    {
+        for(unsigned j = 0; j < b.m.size(); ++j)
+        {
+            if (b.m[j]->label == str[i])
+            {
+                m.push_back(b.m[j]);
+                break;
+            } 
+        }
+    }
+}
+void BagOfNodes::clip(Node * rule)
+{
+    auto it = m.end();
+    it = find(m.begin(), m.end(), rule->left);
+    if (it != m.end())
+    { 
+        m.erase(it);
+    }
+    else
+    {
+        return;
+    }
+    it = find(m.begin(), m.end(), rule->right);
+    if (it != m.end())
+    {
+        m.erase(it);
+        m.push_back(rule);
+    }
+}

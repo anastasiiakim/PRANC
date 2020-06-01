@@ -7,9 +7,9 @@
 #include <cmath>
 #include <algorithm>
 
-int g_i(int & N, int & i, Node * nodeST, Node * nodeGT);
-int totalNumExtraLineages(int & N, Node * nodeST, Node * nodeGT);
-int calcCostForST(int & arg_counter, char* argv[], int & N, Node * newnode);
+int g_i(int & N, int & i, vector <Node *> v, Node * nodeGT);
+int totalNumExtraLineages(int & N, vector <Node *> v, Node * nodeGT);
+int calcCostForST(int & arg_counter, char* argv[], int & N, vector <Node *> v);
 void searchCandidateSpTreeTopology(int &  arg_counter, char* argv[]);
 
 

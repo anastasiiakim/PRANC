@@ -60,13 +60,13 @@ double symbolicGeneTreeProbability(int * m, int *** k, double * s, double * coal
 
 
 
-double getOneSymbolicGeneTreeProb(int N, double * s,  Node * newnode, Node * newnodeGT, int ** ar_y, double * array_invcoal, Node ** arMrca, int ** ar_rankns, int ***k, ofstream & fout, ofstream & histprobs_file)
+double getOneSymbolicGeneTreeProb(int N, double * s,  vector <Node *> v, Node * newnodeGT, int ** ar_y, double * array_invcoal, Node ** arMrca, int ** ar_rankns, int ***k, ofstream & fout, ofstream & histprobs_file)
 {
   
-  returnMrca(newnode, newnodeGT, N, arMrca);
+  returnMrca(v, newnodeGT, N, arMrca);
 
   int * arRankHistory = new int [N-1];
-  get_hseq(arRankHistory, newnodeGT, newnode, N);
+  get_hseq(arRankHistory, newnodeGT, v, N);
   reverseArraySort(arRankHistory, N);
 
 
@@ -128,6 +128,7 @@ double getOneSymbolicGeneTreeProb(int N, double * s,  Node * newnode, Node * new
     onehistprob = symbolicGeneTreeProbability(m_i, k, s, array_invcoal, N, fout);
     prob_val += onehistprob;
 
+    cout << "---------------------" << endl;
     for(int i = 0; i < N-1; ++i) histprobs_file << next_history[i];
       histprobs_file << '\t';        
     histprobs_file << onehistprob << endl;
@@ -146,7 +147,7 @@ double getOneSymbolicGeneTreeProb(int N, double * s,  Node * newnode, Node * new
 
 
 
-double getSymbolicGeneTreeProb(int & arg_counter, char* argv[], int & N, Node * newnode, double* s, int** ar_y)
+double getSymbolicGeneTreeProb(int & arg_counter, char* argv[], int & N, vector <Node *> v, double* s, int** ar_y)
 {
   string strGT="";
   ifstream finGT(argv[arg_counter]); 
@@ -196,13 +197,12 @@ double getSymbolicGeneTreeProb(int & arg_counter, char* argv[], int & N, Node * 
     pushToArray(newnodeGT, tailGT, arGT);
     getRanks(newnodeGT, tailGT, arGT);
     getDescTaxa(newnodeGT, N);
-    total += getOneSymbolicGeneTreeProb(N, s,  newnode, newnodeGT, ar_y, array_invcoal, arMrca, ar_rankns, k, fout, histprobs_file);
+    total += getOneSymbolicGeneTreeProb(N, s, v, newnodeGT, ar_y, array_invcoal, arMrca, ar_rankns, k, fout, histprobs_file);
 
     delete [] arGT;
 
     deleteTree(newnodeGT);
     deleteStack(stkGT);
-
   }
 
   delete [] array_invcoal;
@@ -237,6 +237,7 @@ void symbolicProbsRankedGtInput(int &  arg_counter, char* argv[])
 
   double * s_times = new double [N-1];
   double * s = new double [N-2];
+  vector <Node *> v;
   int ** ar_y = new int * [N];
   for (int i = 0; i < N; i++) ar_y[i] = new int [N];
 
@@ -246,8 +247,8 @@ void symbolicProbsRankedGtInput(int &  arg_counter, char* argv[])
       ar_y[i][j] = 0;
     }
   
-  speciesTreeProcessing(newnode, N, s_times, s, ar_y);
-  cout << "Total: " << getSymbolicGeneTreeProb(arg_counter, argv, N, newnode, s, ar_y) << endl;
+  speciesTreeProcessing(newnode, N, s_times, s, v, ar_y);
+  cout << "Total: " << getSymbolicGeneTreeProb(arg_counter, argv, N, v, s, ar_y) << endl;
 
   for(int i = 0; i < N; ++i)
   {
