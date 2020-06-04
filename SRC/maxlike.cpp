@@ -15,6 +15,7 @@
 #include "probs_calculation.h"
 #include "ranking_unr_gt.h"
 #include "write_ranked_tree.h"
+#include "get_unranked_topology.h"
 #include "maxlike.h"
 #include "lbfgsb.h"
 
@@ -565,16 +566,16 @@ void rankUnrankedTrees(Node * spnode, int Numtaxa, int rounds, vector<int> index
     if(seq.size() != tops_count) cout << "ERROR: not all ranks!" << endl;
     //    int NR = 2*Numtaxa; // how many rankings to select
 
- //   cout << "overal  ranks: " << seq.size() << endl;
+    //   cout << "overal  ranks: " << seq.size() << endl;
     int sample_NR = 2*Numtaxa; // how many rankings to select
-   // int sample_NR = 2*Numtaxa; // how many rankings to select
+    // int sample_NR = 2*Numtaxa; // how many rankings to select
     //int check_NR = (int) (Numtaxa/2.); // how many rankings to select
     int check_NR = (int) (Numtaxa); // how many rankings to select
-   // int check_NR = 2*Numtaxa; // how many rankings to select
+    // int check_NR = 2*Numtaxa; // how many rankings to select
     int diff_NR = sample_NR - check_NR; // how many rankings to select
     double neg_loglike = 0.;
     int th_counter = 0;
-//    cout << "threshold: " << threshold << endl;
+    //    cout << "threshold: " << threshold << endl;
 
 
     vector<int> shuffle_rankings;  
@@ -597,7 +598,7 @@ void rankUnrankedTrees(Node * spnode, int Numtaxa, int rounds, vector<int> index
         }
     }  
 
-  //  cout << "**************************** NR: " << NR << endl;
+    //  cout << "**************************** NR: " << NR << endl;
     for(int i = 0; i < check_NR; ++i)
     {
         if(vlabels.size() != 0)
@@ -619,7 +620,7 @@ void rankUnrankedTrees(Node * spnode, int Numtaxa, int rounds, vector<int> index
 
         double min_temp = 0.;
         neg_loglike = lbfgs(init_h, s, Numtaxa, vlabels, ar_y, gts_vect);
-    //    cout << i << " " << neg_loglike << endl;
+        //    cout << i << " " << neg_loglike << endl;
 
         unBeadSpeciesTree(spnode);
 
@@ -633,7 +634,7 @@ void rankUnrankedTrees(Node * spnode, int Numtaxa, int rounds, vector<int> index
     }
 
     double min_res = res[0];
-//    cout << "----- min_res = " << min_res << " " << th_counter  << " " << check_NR<< endl; 
+    //    cout << "----- min_res = " << min_res << " " << th_counter  << " " << check_NR<< endl; 
     if(th_counter != 0)
     {
 
@@ -648,8 +649,8 @@ void rankUnrankedTrees(Node * spnode, int Numtaxa, int rounds, vector<int> index
                     j = i;
                 }
             }
-   //         cout << "+++++best ranking j: " << j << endl;
-  //          cout << "+++++min_res = " << min_res << " threshold = " << threshold << endl;
+            //         cout << "+++++best ranking j: " << j << endl;
+            //          cout << "+++++min_res = " << min_res << " threshold = " << threshold << endl;
 
             if(min_res < threshold)
             {
@@ -663,7 +664,7 @@ void rankUnrankedTrees(Node * spnode, int Numtaxa, int rounds, vector<int> index
                 }
 
                 threshold = min_res;
- //               cout << "NR fin_res = " << threshold << endl;
+                //               cout << "NR fin_res = " << threshold << endl;
                 assignRanks(spnode, seq[shuffle_rankings[j]-1]);
                 distFrRootBasedOnRanks(spnode, Numtaxa, vlabels);
                 int temp = 0;
@@ -698,7 +699,7 @@ void rankUnrankedTrees(Node * spnode, int Numtaxa, int rounds, vector<int> index
 
                 double min_temp = 0.;
                 neg_loglike = lbfgs(init_h, s, Numtaxa, vlabels, ar_y, gts_vect);
-     //           cout << i << " " << neg_loglike << endl;
+                //           cout << i << " " << neg_loglike << endl;
 
                 unBeadSpeciesTree(spnode);
                 res[i] = neg_loglike;
@@ -719,8 +720,8 @@ void rankUnrankedTrees(Node * spnode, int Numtaxa, int rounds, vector<int> index
                     j = i;
                 }
             }
-    //        cout << "-best ranking j: " << j << endl;
-   //         cout << "-min_res = " << min_res << " threshold = " << threshold << endl;
+            //        cout << "-best ranking j: " << j << endl;
+            //         cout << "-min_res = " << min_res << " threshold = " << threshold << endl;
 
             if(min_res < threshold)
             {
@@ -1057,7 +1058,6 @@ int calcNumberOfTaxaBrL(std::string str)
 
 string pickInitialCandidate(vector<string> sp_vect, vector<string> gts_vect, Node *& newnode, int & N, vector <Node *> v)
 {
-    int lbl = 0;
     int itemp = 0;
     int tail = 0;
     size_t maxQue;
@@ -1066,188 +1066,328 @@ string pickInitialCandidate(vector<string> sp_vect, vector<string> gts_vect, Nod
     double neg_loglike;
     vector <string> species_vect;
     str = sp_vect[0];
-    N = calcNumberOfTaxa(str);
+    //N = calcNumberOfTaxa(str);
     //N = calcNumberOfTaxaBrL(str);
     //cout << "N " << N << endl;
-    for(int i = 0; i < sp_vect.size(); ++i)
-    {
-        Node * pt;
-        vector <string> ranked_vect;
-        str = sp_vect[i];
-        std::stack <Node *> stkGTunr;
-        int lblUnrGT = 0;
-        string * ar_strlbl = new string[N-1];
-        pushNodesUnrankedGT(lblUnrGT, stkGTunr, str, ar_strlbl);
-        pt = stkGTunr.top();
-        getDescTaxa(pt, N);
-        pt -> rank = 1;
-        int prod = 1;
-        str = "";
-        int temp = 0;
-        int tops_count = numberOfRankings(pt, N, prod);
-        vector<vector<int>> seq = permuteRanks(pt);
-        if(seq.size() != tops_count) cout << "ERROR: not all ranks!" << endl;
-        for(int i = 0; i < seq.size(); ++i)
+    int indicator = 0;
+    int lbl = countNumberTaxa(indicator, str);
+  //  cout << "indicator: " << indicator << endl;
+    N = lbl;
+
+    if(indicator == 0) //no branch lengths
+    {   
+        for(int i = 0; i < sp_vect.size(); ++i)
         {
+            Node * pt;
+            vector <string> ranked_vect;
+            str = sp_vect[i];
+            std::stack <Node *> stkGTunr;
+            int lblUnrGT = 0;
+            string * ar_strlbl = new string[N-1];
+            pushNodesUnrankedGT(lblUnrGT, stkGTunr, str, ar_strlbl);
+            pt = stkGTunr.top();
+            getDescTaxa(pt, N);
+            pt -> rank = 1;
+            int prod = 1;
             str = "";
-            assignRanks(pt, seq[i]);
-            writeRankTreeIntoStr(pt, temp, N, str);
-            ranked_vect.push_back(str);
-        }
-
-        delete [] ar_strlbl;
-        deleteStack(stkGTunr);
-        deleteTree(pt);
-
-
-
-        vector<int> index_vector;
-        vector<int> fin_num_cands;
-        int v_size = ranked_vect.size();
-        for(int i = 0; i < ranked_vect.size(); ++i)
-            index_vector.push_back(i);
-
-        //select subset of rankings	
-        //int N_subset = 2*N;
-        int N_subset = index_vector.size();
-        if(index_vector.size() > N_subset)
-        {
-            fisher_shuffle(index_vector);
-            for(int i = 0; i < N_subset; ++i)
-                fin_num_cands.push_back(index_vector[i]);
-            v_size = N_subset;
-            for(int j = 0;j < N_subset; ++j)
-                species_vect.push_back(ranked_vect[fin_num_cands[j]]);
-        }
-        else
-        {
-            species_vect = ranked_vect;
-        }
-
-    }
-
-    double tmp_array[species_vect.size()];
-    for(int i = 0; i < species_vect.size(); ++i)
-    {
-        str = species_vect[i];
-        stack<Node*> stkST;
-        lbl = 0;
-        pushNodes(lbl, stkST , str);
-        Node * newnode = stkST.top();
-        newnode -> distFrRoot = 0.;
-        tempdist = 0.;
-        distFromRoot(newnode);
-        isUltrametric(newnode, tempdist);
-
-        tail = 0;
-        int ** ar_y = new int * [N];
-        for (int i = 0; i < N; i++) ar_y[i] = new int [N];
-        for (int i = 0; i < N; ++i)
-        {
-            for (int j = 0; j < N; ++j)
+            int temp = 0;
+            int tops_count = numberOfRankings(pt, N, prod);
+            vector<vector<int>> seq = permuteRanks(pt);
+            if(seq.size() != tops_count) cout << "ERROR: not all ranks!" << endl;
+            for(int i = 0; i < seq.size(); ++i)
             {
-                ar_y[i][j] = 0;
+                str = "";
+                assignRanks(pt, seq[i]);
+                writeRankTreeIntoStr(pt, temp, N, str);
+                ranked_vect.push_back(str);
+            }
+
+            delete [] ar_strlbl;
+            deleteStack(stkGTunr);
+            deleteTree(pt);
+
+
+
+            vector<int> index_vector;
+            vector<int> fin_num_cands;
+            int v_size = ranked_vect.size();
+            for(int i = 0; i < ranked_vect.size(); ++i)
+                index_vector.push_back(i);
+
+            //select subset of rankings	
+            //int N_subset = 2*N;
+            int N_subset = index_vector.size();
+            if(index_vector.size() > N_subset)
+            {
+                fisher_shuffle(index_vector);
+                for(int i = 0; i < N_subset; ++i)
+                    fin_num_cands.push_back(index_vector[i]);
+                v_size = N_subset;
+                for(int j = 0;j < N_subset; ++j)
+                    species_vect.push_back(ranked_vect[fin_num_cands[j]]);
+            }
+            else
+            {
+                species_vect = ranked_vect;
+            }
+
+        }
+
+        double tmp_array[species_vect.size()];
+        for(int i = 0; i < species_vect.size(); ++i)
+        {
+            str = species_vect[i];
+            stack<Node*> stkST;
+            lbl = 0;
+            pushNodes(lbl, stkST , str);
+            Node * newnode = stkST.top();
+            newnode -> distFrRoot = 0.;
+            tempdist = 0.;
+            distFromRoot(newnode);
+            isUltrametric(newnode, tempdist);
+
+            tail = 0;
+            int ** ar_y = new int * [N];
+            for (int i = 0; i < N; i++) ar_y[i] = new int [N];
+            for (int i = 0; i < N; ++i)
+            {
+                for (int j = 0; j < N; ++j)
+                {
+                    ar_y[i][j] = 0;
+                }
+            }
+            double * arDistFrRoot = new double [N];
+            Node ** ar = new Node * [N];
+
+            double s_times[N-1];
+            double s[N-2];
+
+            pushToArray(newnode, tail, ar);
+            getRanks(newnode, tail, ar);
+            if(v.size() != 0)
+            {
+                while (!v.empty())
+                {
+                    v.pop_back();
+                }
+            }
+
+            getS(newnode, s_times, v);
+            for(int j = 2; j < N; ++j)
+            {
+                s[j-2] = s_times[j-2] - s_times[j-1];
+            }
+            itemp = 0;
+            saveDistFrRoot(newnode, arDistFrRoot, itemp);
+
+            maxQue = (size_t) N*(1+N)/2;
+            makeBeadedTree(newnode, maxQue);
+            makeBeadedArray(newnode, ar_y, maxQue);
+
+            vector<int> index_vector;
+            for(int i = 0; i < N - 2; ++i)
+                index_vector.push_back(i);
+
+
+            double initial_br_length[N];
+            for(int i = 0; i < N - 2; ++i)
+                initial_br_length[i] = s[i];
+
+            double res = 0.;
+            //int rounds = (int) (N/2.);
+            //     int rounds = N_rounds;
+
+
+
+            //   vector<vector<vector<double>>> gts_probs_vect;
+            //   neg_loglike = newCalcNegativeLike(N, s, v, ar_y, gts_vect, gts_probs_vect);
+
+            // cout << "pick init nll: " << neg_loglike << endl;
+            int ***k;
+            k = new int **[N+1];
+            for(int i = 0; i < N+1; i++)
+            {
+                k[i] = new int *[N];
+                for(int j = 0; j < N; ++j)
+                    k[i][j] = new int[N+1];
+            }
+
+            // for(int j = 0; j < rounds; ++j)
+            //  {
+            //     fisher_shuffle(index_vector);
+            //   for(int index = 0; index < N - 2; ++index)
+            // {
+            neg_loglike = lbfgs(init_h, s, N, v, ar_y, gts_vect);
+            //cout << "pick init neg_loglike = " << neg_loglike << endl;
+            // }
+
+            // if(res > neg_loglike) j = rounds;
+            //  else neg_loglike = res;
+            // }
+            tmp_array[i] = neg_loglike;
+            for(int i = 0; i < N+1; ++i)
+            {
+                for(int j = 0; j < N; ++j)
+                    delete [] k[i][j];
+                delete [] k[i];
+            }
+            delete [] k;
+            for(int i = 0; i < N; ++i)
+            {
+                delete[] ar_y[i];
+            }
+            delete[] ar_y;
+            deleteTree(newnode);
+
+            delete[] ar;
+            delete[] arDistFrRoot;
+        }
+
+        double tmp = tmp_array[0];
+        int min_i = 0;
+        for(int i = 1; i < species_vect.size(); ++i)
+        {
+            if(tmp_array[i] < tmp)
+            {
+                tmp = tmp_array[i];
+                min_i = i;
             }
         }
-        double * arDistFrRoot = new double [N];
-        Node ** ar = new Node * [N];
+        //cout << min_i << endl;
+        return species_vect[min_i];
 
-        double s_times[N-1];
-        double s[N-2];
+    }
+    else
+    {
 
-        pushToArray(newnode, tail, ar);
-        getRanks(newnode, tail, ar);
-        if(v.size() != 0)
+
+        double tmp_array[sp_vect.size()];
+        for(int i = 0; i < sp_vect.size(); ++i)
         {
-            while (!v.empty())
+
+            str = sp_vect[i];
+            stack<Node*> stkST;
+            lbl = 0;
+            pushNodes(lbl, stkST , str);
+            Node * newnode = stkST.top();
+            newnode -> distFrRoot = 0.;
+            tempdist = 0.;
+            distFromRoot(newnode);
+            isUltrametric(newnode, tempdist);
+            tail = 0;
+            int ** ar_y = new int * [N];
+            for (int i = 0; i < N; i++) ar_y[i] = new int [N];
+            for (int i = 0; i < N; ++i)
             {
-                v.pop_back();
+                for (int j = 0; j < N; ++j)
+                {
+                    ar_y[i][j] = 0;
+                }
+            }
+            double * arDistFrRoot = new double [N];
+            Node ** ar = new Node * [N];
+
+            double s_times[N-1];
+            double s[N-2];
+
+            pushToArray(newnode, tail, ar);
+            getRanks(newnode, tail, ar);
+            if(v.size() != 0)
+            {
+                while (!v.empty())
+                {
+                    v.pop_back();
+                }
+            }
+
+            getS(newnode, s_times, v);
+            for(int j = 2; j < N; ++j)
+            {
+                s[j-2] = s_times[j-2] - s_times[j-1];
+            }
+            itemp = 0;
+            saveDistFrRoot(newnode, arDistFrRoot, itemp);
+
+            maxQue = (size_t) N*(1+N)/2;
+            makeBeadedTree(newnode, maxQue);
+            makeBeadedArray(newnode, ar_y, maxQue);
+
+            vector<int> index_vector;
+            for(int i = 0; i < N - 2; ++i)
+                index_vector.push_back(i);
+
+
+            double initial_br_length[N];
+            for(int i = 0; i < N - 2; ++i)
+                initial_br_length[i] = s[i];
+
+            double res = 0.;
+            //int rounds = (int) (N/2.);
+            //     int rounds = N_rounds;
+
+
+
+            //   vector<vector<vector<double>>> gts_probs_vect;
+            //   neg_loglike = newCalcNegativeLike(N, s, v, ar_y, gts_vect, gts_probs_vect);
+
+            // cout << "pick init nll: " << neg_loglike << endl;
+            int ***k;
+            k = new int **[N+1];
+            for(int i = 0; i < N+1; i++)
+            {
+                k[i] = new int *[N];
+                for(int j = 0; j < N; ++j)
+                    k[i][j] = new int[N+1];
+            }
+
+            // for(int j = 0; j < rounds; ++j)
+            //  {
+            //     fisher_shuffle(index_vector);
+            //   for(int index = 0; index < N - 2; ++index)
+            // {
+            neg_loglike = lbfgs(init_h, s, N, v, ar_y, gts_vect);
+          //  cout << "pick init neg_loglike = " << neg_loglike << endl;
+            // }
+
+            // if(res > neg_loglike) j = rounds;
+            //  else neg_loglike = res;
+            // }
+            tmp_array[i] = neg_loglike;
+            for(int i = 0; i < N+1; ++i)
+            {
+                for(int j = 0; j < N; ++j)
+                    delete [] k[i][j];
+                delete [] k[i];
+            }
+            delete [] k;
+            for(int i = 0; i < N; ++i)
+            {
+                delete[] ar_y[i];
+            }
+            delete[] ar_y;
+            deleteTree(newnode);
+
+            delete[] ar;
+            delete[] arDistFrRoot;
+        }
+
+        double tmp = tmp_array[0];
+        int min_i = 0;
+        for(int i = 1; i < species_vect.size(); ++i)
+        {
+            if(tmp_array[i] < tmp)
+            {
+                tmp = tmp_array[i];
+                min_i = i;
             }
         }
-
-        getS(newnode, s_times, v);
-        for(int j = 2; j < N; ++j)
-        {
-            s[j-2] = s_times[j-2] - s_times[j-1];
-        }
-        itemp = 0;
-        saveDistFrRoot(newnode, arDistFrRoot, itemp);
-
-        maxQue = (size_t) N*(1+N)/2;
-        makeBeadedTree(newnode, maxQue);
-        makeBeadedArray(newnode, ar_y, maxQue);
-
-        vector<int> index_vector;
-        for(int i = 0; i < N - 2; ++i)
-            index_vector.push_back(i);
-
-
-        double initial_br_length[N];
-        for(int i = 0; i < N - 2; ++i)
-            initial_br_length[i] = s[i];
-
-        double res = 0.;
-        //int rounds = (int) (N/2.);
-        //     int rounds = N_rounds;
+        return sp_vect[min_i];
 
 
 
-        //   vector<vector<vector<double>>> gts_probs_vect;
-        //   neg_loglike = newCalcNegativeLike(N, s, v, ar_y, gts_vect, gts_probs_vect);
 
-        // cout << "pick init nll: " << neg_loglike << endl;
-        int ***k;
-        k = new int **[N+1];
-        for(int i = 0; i < N+1; i++)
-        {
-            k[i] = new int *[N];
-            for(int j = 0; j < N; ++j)
-                k[i][j] = new int[N+1];
-        }
 
-        // for(int j = 0; j < rounds; ++j)
-        //  {
-        //     fisher_shuffle(index_vector);
-        //   for(int index = 0; index < N - 2; ++index)
-        // {
-        neg_loglike = lbfgs(init_h, s, N, v, ar_y, gts_vect);
-        //cout << "pick init neg_loglike = " << neg_loglike << endl;
-        // }
-
-        // if(res > neg_loglike) j = rounds;
-        //  else neg_loglike = res;
-        // }
-        tmp_array[i] = neg_loglike;
-        for(int i = 0; i < N+1; ++i)
-        {
-            for(int j = 0; j < N; ++j)
-                delete [] k[i][j];
-            delete [] k[i];
-        }
-        delete [] k;
-        for(int i = 0; i < N; ++i)
-        {
-            delete[] ar_y[i];
-        }
-        delete[] ar_y;
-        deleteTree(newnode);
-
-        delete[] ar;
-        delete[] arDistFrRoot;
     }
-
-    double tmp = tmp_array[0];
-    int min_i = 0;
-    for(int i = 1; i < species_vect.size(); ++i)
-    {
-        if(tmp_array[i] < tmp)
-        {
-            tmp = tmp_array[i];
-            min_i = i;
-        }
-    }
-    //cout << min_i << endl;
-    return species_vect[min_i];
 }
 
 
