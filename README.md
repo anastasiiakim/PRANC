@@ -82,8 +82,8 @@ All input files should be in the Newick format. All trees are treated as rooted 
 ./pranc -cons <unranked-tree-file-name>
 ```
 * ```<unranked-tree-file-name>``` contains unranked trees in the Newick format. The branch lengths will be ignored if given.
-* The program outputs greedy consensus tree without branch lengths (*outGreedyCons.txt*). The method is different from the usual one (i.e. the one in *Phylip* (Majority consensus (extended) in *consense*)). This method outputs a tree that has a maximum score, where score is determined by summing the frequencies of compatible clades. Ties resolved randomly.
-*  *Important note*: currently the program can only work with taxa named t1, t2, t3, etc. Please rename your taxa names before running this option.
+* The program outputs greedy consensus tree without branch lengths (*outGreedyCons.txt*). <!-- The method is different from the usual one (i.e. the one in *Phylip* (Majority consensus (extended) in *consense*)). This method outputs a tree that has a maximum score, where score is determined by summing the frequencies of compatible clades. Ties resolved randomly. -->
+*  *Important note*: currently the program can only work with taxa named t1, t2, t3, etc (up to t9). It also can work with taxa named A, B, C, D, ..., Z. Please rename your taxa names before running this option.
 ```
 ./pranc -like_nonni <species-tree-file-name> -rgt <ranked-tree-file-name>
 ./pranc -like_nonni <species-tree-file-name> -ugt <unranked-tree-file-name>
