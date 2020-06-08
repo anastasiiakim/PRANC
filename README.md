@@ -83,15 +83,26 @@ All input files should be in the Newick format. All trees are treated as rooted 
 * ```<unranked-tree-file-name>``` contains unranked trees in the Newick format. The branch lengths will be ignored if given.
 * The program outputs greedy consensus tree without branch lengths (*outGreedyCons.txt*). <!-- The method is different from the usual one (i.e. the one in *Phylip* (Majority consensus (extended) in *consense*)). This method outputs a tree that has a maximum score, where score is determined by summing the frequencies of compatible clades. Ties resolved randomly. -->
 *  *Important note*: currently the program can only work with taxa named t1, t2, t3, etc (up to t9). It also can work with taxa named A, B, C, D, ..., Z. Please rename your taxa names before running this option.
+
+
 ```
 ./pranc -like_nonni <species-tree-file-name> -rgt <ranked-tree-file-name>
+./pranc -like_nonni <species-tree-file-name> -rgt <ranked-tree-file-name> -lb 0.001 -ub 6 -tol 1e-10 -tiplen 0.1
 ./pranc -like_nonni <species-tree-file-name> -ugt <unranked-tree-file-name>
 ```
 * ```<ranked-tree-file-name>``` contains ranked trees in the Newick format. 
 * ```<unranked-tree-file-name>``` contains unranked trees in the Newick format. 
-* The program calculates maximum likelihood branch lengths using Brent's (1973) optimization technique for a given species tree topology. *PRANC* changes each length one at a time, fixing the other lengths. It allows the length to be in the interval *[0.001, 6]* coalescent units. Note that *PRANC* first computes maximum likelihood speciation intervals, and then translates them to the branch lengths by setting the time of the most recent internal node to 1.0 coalescent unit. *PRANC* randomly picks speciation interval orders for optimization. After *m* rounds of such optimizations (by default, *m* is set to the number of taxa (leaves)), the optimal tree is reported.
+* The program calculates maximum likelihood branch lengths using L-BFGS (Byrd et al., 1995) optimization technique for a given species tree topology. *PRANC* changes all lengths at the same time. It allows the length to be in the interval *[0.001, 6]* (-lb, -ub) coalescent units. Note that *PRANC* first computes maximum likelihood speciation intervals, and then translates them to the branch lengths by setting the time of the most recent internal node to 0.1 (-tiplen) coalescent unit. The tolerance is controlled by -tol option.
+* Default settings: 
+* -lb 0.001
+* -ub 6
+* -tol 1e-10
+* -tiplen 0.1
+
+
 ```
 ./pranc -like_nni <starting-species-tree-file-name> -rgt <ranked-tree-file-name>
+./pranc -like_nni <starting-species-tree-file-name> -rgt <ranked-tree-file-name> -nni 5 -diff 0.1 -startsubset 3 -initsubset 3 -maxsubset 1  -lb 0.001 -ub 6 -tol 1e-10 -tiplen 0.1
 ./pranc -like_nni <starting-species-tree-file-name> -ugt <unranked-tree-file-name>
 
 ```
@@ -99,7 +110,36 @@ All input files should be in the Newick format. All trees are treated as rooted 
 * ```<ranked-tree-file-name>``` contains ranked trees in the Newick format. 
 * ```<unranked-tree-file-name>``` contains unranked trees in the Newick format. 
 * The program processes the initial species trees and picks the one with the highest likelihood *T*. Then it searches a space of unranked trees to find trees that are one nearest neighbor interchange (NNI) away from *T*. After that, *PRANC* searches for the speciation interval lengths that maximizes the likelihood of the ranked gene trees. The process is repeated *k* times (*k=5* NNIs by default). At the end, *PRANC* calculates the branch lengths of the inferred tree.   
+* Default settings: 
+* -nni 5
+* -diff 0.1
+* -startsubset All possible rankings
+* -initsubset Number of taxa (leaves)
+* -maxsubset 2*Number of taxa (leaves)
+* -lb 0.001
+* -ub 6
+* -tol 1e-10
+* -tiplen 0.1
 
+```
+./pranc -like_nni_brent <species-tree-file-name> -rgt <ranked-tree-file-name>
+./pranc -like_nni_brent <species-tree-file-name> -rgt <ranked-tree-file-name> -nni 5 -diff 0.1 -startsubset 3 -initsubset 3 -maxsubset 10 -rounds 5  -lb 0.001 -ub 6 -tol 1e-06 -eps 1e-06 -tiplen 0.1
+./pranc -like_nni_brent <species-tree-file-name> -ugt <unranked-tree-file-name>
+```
+* ```<ranked-tree-file-name>``` contains ranked trees in the Newick format. 
+* ```<unranked-tree-file-name>``` contains unranked trees in the Newick format. 
+* The program calculates maximum likelihood branch lengths using Brent's (1973) optimization technique for a given species tree topology. *PRANC* changes each length one at a time, fixing the other lengths. It allows the length to be in the interval *[0.001, 6]* (-lb, -ub) coalescent units. Note that *PRANC* first computes maximum likelihood speciation intervals, and then translates them to the branch lengths by setting the time of the most recent internal node to 0.1 (-tiplen) coalescent unit. *PRANC* randomly picks speciation interval orders for optimization. After *m* rounds of such optimizations (by default, *m* is set to the number of taxa (leaves)), the optimal tree is reported.
+* Default settings: 
+* -nni 5
+* -diff 0.1
+* -rounds 5
+* -startsubset All possible rankings
+* -maxsubset 2*Number of taxa (leaves)
+* -lb 0.001
+* -ub 6
+* -tol 1e-06
+* -eps 1e-06
+* -tiplen 0.1
 
 ## Examples
 All input files used below can be found in the *BIN* folder. 
