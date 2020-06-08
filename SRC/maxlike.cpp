@@ -20,11 +20,8 @@
 #include "lbfgsb.h"
 
 #define MAX_EXPONENT_VALUE 1024
-#define init_a 0.001
-#define init_b 6
-#define init_h 1e-10
 #define N_rounds 0
-#define N_nni 5
+
 using namespace std;
 
 
@@ -552,7 +549,7 @@ void distFrRootBasedOnRanks(Node * p, int N, vector <Node *> & v)
 }
 
 
-void rankUnrankedTrees(Node * spnode, int Numtaxa, int rounds, vector<int> index_vector, int ** ar_y, int ***k, double * s, vector <Node *> & vlabels, vector<string> gts_vect, double & threshold, string & candidate_str, double x)
+void rankUnrankedTrees(Node * spnode, int Numtaxa, int rounds, vector<int> index_vector, int ** ar_y, int ***k, double * s, vector <Node *> & vlabels, vector<string> gts_vect, double & threshold, string & candidate_str, double x, double init_a, double init_b, double init_h, int N_subset, int N_maxsubset)
 {
     int prod = 1;
 
@@ -567,16 +564,39 @@ void rankUnrankedTrees(Node * spnode, int Numtaxa, int rounds, vector<int> index
     //    int NR = 2*Numtaxa; // how many rankings to select
 
     //   cout << "overal  ranks: " << seq.size() << endl;
-    int sample_NR = 2*Numtaxa; // how many rankings to select
-    // int sample_NR = 2*Numtaxa; // how many rankings to select
+    int sample_NR;
+    int check_NR;
+
+    if(N_maxsubset == 0) 
+    {
+        sample_NR = 2*Numtaxa;
+    }
+    else 
+    {
+        sample_NR = N_maxsubset; // how many rankings to select
+    }
+
+    if(N_subset == 0) 
+    {
+        check_NR = Numtaxa;
+    }
+    else 
+    {
+        check_NR = N_subset;
+    }
     //int check_NR = (int) (Numtaxa/2.); // how many rankings to select
-    int check_NR = (int) (Numtaxa); // how many rankings to select
     // int check_NR = 2*Numtaxa; // how many rankings to select
+
+    if(check_NR >= sample_NR) 
+    {
+         check_NR = Numtaxa; //cout << "Error! Select different number of rankings. Set to default" << endl;
+         sample_NR = 2*Numtaxa;
+    }
     int diff_NR = sample_NR - check_NR; // how many rankings to select
     double neg_loglike = 0.;
     int th_counter = 0;
-    //    cout << "threshold: " << threshold << endl;
-
+    //cout << "threshold: " << threshold << endl;
+    //cout << "N init max " << check_NR << " " << sample_NR << endl;
 
     vector<int> shuffle_rankings;  
     for(int i = 0; i < seq.size(); ++i)
@@ -619,7 +639,7 @@ void rankUnrankedTrees(Node * spnode, int Numtaxa, int rounds, vector<int> index
         //   neg_loglike = newCalcNegativeLike(Numtaxa, s, vlabels,  ar_y, gts_vect, vect);
 
         double min_temp = 0.;
-        neg_loglike = lbfgs(init_h, s, Numtaxa, vlabels, ar_y, gts_vect);
+        neg_loglike = lbfgs(init_h, s, Numtaxa, vlabels, ar_y, gts_vect, init_a, init_b);
         //    cout << i << " " << neg_loglike << endl;
 
         unBeadSpeciesTree(spnode);
@@ -698,7 +718,7 @@ void rankUnrankedTrees(Node * spnode, int Numtaxa, int rounds, vector<int> index
                 //   neg_loglike = newCalcNegativeLike(Numtaxa, s, vlabels,  ar_y, gts_vect, vect);
 
                 double min_temp = 0.;
-                neg_loglike = lbfgs(init_h, s, Numtaxa, vlabels, ar_y, gts_vect);
+                neg_loglike = lbfgs(init_h, s, Numtaxa, vlabels, ar_y, gts_vect, init_a, init_b);
                 //           cout << i << " " << neg_loglike << endl;
 
                 unBeadSpeciesTree(spnode);
@@ -752,9 +772,9 @@ void calcLikeNoNNI(int & arg_counter, char* argv[])
     //	double a = 0.0001;
     //	double b = 6.;
     //	double t = 1e-10;
+
     int temp = 0;
     string candidate_str="";
-    double x = 0.1;
 
     Node * newnode;
     int N = getNumberOfTaxa(arg_counter, argv, newnode);
@@ -844,7 +864,7 @@ void calcLikeNoNNI(int & arg_counter, char* argv[])
 
 
 
-    int rounds = N_rounds;
+
     //int rounds = (int) (N/2.);
     //   for(int j = 0; j < rounds; ++j)
     //   {
@@ -853,8 +873,50 @@ void calcLikeNoNNI(int & arg_counter, char* argv[])
 
     //   for(int index = 0; index < N - 2; ++index)
     // {
-    res = lbfgs(init_h, s, N, v, ar_y, gts_vect);
-    // cout << res << " " << res << endl;
+    int rounds = N_rounds;
+    double x = 0.1;
+    double init_a = 0.001;
+    double init_b = 6;
+    double init_h = 1e-10;
+
+    int i = arg_counter + 1;
+    while(argv[i] != NULL)
+    {
+       
+        if (strcmp(argv[i], "-lb") == 0)
+        {
+            ++i;
+            init_a =  atof(argv[i]);
+
+        }
+        else if (strcmp(argv[i], "-ub") == 0)
+        {
+            ++i;
+            init_b =  atof(argv[i]);
+
+        }
+        else if (strcmp(argv[i], "-tol") == 0)
+        {
+            ++i;
+            init_h =  atof(argv[i]);
+
+        }
+        else if (strcmp(argv[i], "-tiplen") == 0)
+        {
+            ++i;
+            x =  atof(argv[i]);
+
+        }
+        ++i;
+    }
+     
+
+    cout << "The time of the most recent clade is set to " << x << endl; 
+    cout << "Optimize branch lengths using L-BFGS method with tolerance " << init_h << endl;
+    cout << "Allow the branch length to be in the interval [" << init_a << ", " << init_b << "]" << endl;
+
+    res = lbfgs(init_h, s, N, v, ar_y, gts_vect, init_a, init_b);
+    cout << "Negative log-likelihood = " << res << endl;
 
 
     //		cout << j << " " << index_vector[index] << " res " << res << endl;
@@ -1004,7 +1066,7 @@ void unBeadSpeciesTree(Node * p)
    }
    */
 
-void readUnrankedTrees(string str_ST, int N, int rounds, vector<int> index_vector, int ** ar_y, int ***k,  double * s, vector <Node *> v, vector<string> gts_vect, double & threshold, string & candidate_str, double x)
+void readUnrankedTrees(string str_ST, int N, int rounds, vector<int> index_vector, int ** ar_y, int ***k,  double * s, vector <Node *> v, vector<string> gts_vect, double & threshold, string & candidate_str, double x, double init_a, double init_b, double init_h, int N_subset, int N_maxsubset)
 {
     std::stack <Node *> stkGTunr;
     int lblUnrGT = 0;
@@ -1013,7 +1075,7 @@ void readUnrankedTrees(string str_ST, int N, int rounds, vector<int> index_vecto
     Node * pnode = stkGTunr.top();
     getDescTaxa(pnode, N);
     pnode -> rank = 1;
-    rankUnrankedTrees(pnode, N, rounds, index_vector, ar_y, k, s, v, gts_vect, threshold, candidate_str, x);
+    rankUnrankedTrees(pnode, N, rounds, index_vector, ar_y, k, s, v, gts_vect, threshold, candidate_str, x, init_a, init_b, init_h, N_subset, N_maxsubset);
 
     deleteTree(pnode);
 }
@@ -1056,7 +1118,7 @@ int calcNumberOfTaxaBrL(std::string str)
 
 
 
-string pickInitialCandidate(vector<string> sp_vect, vector<string> gts_vect, Node *& newnode, int & N, vector <Node *> v)
+string pickInitialCandidate(vector<string> sp_vect, vector<string> gts_vect, Node *& newnode, int & N, vector <Node *> v, double init_h, double init_a, double init_b, int N_subset)
 {
     int itemp = 0;
     int tail = 0;
@@ -1116,7 +1178,11 @@ string pickInitialCandidate(vector<string> sp_vect, vector<string> gts_vect, Nod
 
             //select subset of rankings	
             //int N_subset = 2*N;
-            int N_subset = index_vector.size();
+            if(N_subset == 0)
+            {
+                N_subset = index_vector.size();
+                cout << "The number of rankings considered of the starting tree(s): " << N_subset << endl;
+            }
             if(index_vector.size() > N_subset)
             {
                 fisher_shuffle(index_vector);
@@ -1217,7 +1283,7 @@ string pickInitialCandidate(vector<string> sp_vect, vector<string> gts_vect, Nod
             //     fisher_shuffle(index_vector);
             //   for(int index = 0; index < N - 2; ++index)
             // {
-            neg_loglike = lbfgs(init_h, s, N, v, ar_y, gts_vect);
+            neg_loglike = lbfgs(init_h, s, N, v, ar_y, gts_vect, init_a, init_b);
             //cout << "pick init neg_loglike = " << neg_loglike << endl;
             // }
 
@@ -1345,7 +1411,7 @@ string pickInitialCandidate(vector<string> sp_vect, vector<string> gts_vect, Nod
             //     fisher_shuffle(index_vector);
             //   for(int index = 0; index < N - 2; ++index)
             // {
-            neg_loglike = lbfgs(init_h, s, N, v, ar_y, gts_vect);
+            neg_loglike = lbfgs(init_h, s, N, v, ar_y, gts_vect, init_a, init_b);
           //  cout << "pick init neg_loglike = " << neg_loglike << endl;
             // }
 
@@ -1490,11 +1556,100 @@ void calcLikeWithNNI(int & arg_counter, char* argv[])
         finGT.close();
     }
 
+
+
+
+    int N_nni = 5;
+    int N_initsubset = 0;
+    int N_subset = 0;
+    int N_maxsubset = 0;
+
+    double diff = 0.1;
+    double x = 0.1;
+    double init_a = 0.001;
+    double init_b = 6;
+    double init_h = 1e-10;
+
+    int i = arg_counter + 1;
+    while(argv[i] != NULL)
+    {
+       
+        if(strcmp(argv[i], "-nni") == 0)
+        {
+            ++i;
+            N_nni = atoi(argv[i]);        
+        }
+        else if (strcmp(argv[i], "-diff") == 0)
+        {
+            ++i;
+            diff =  atof(argv[i]);
+
+        }        
+        else if (strcmp(argv[i], "-startsubset") == 0)
+        {
+            ++i;
+            N_initsubset =  atoi(argv[i]);
+            cout << "The number of maximum rankings considered of the starting tree(s): " << N_initsubset << endl;
+
+        }        
+        else if (strcmp(argv[i], "-initsubset") == 0)
+        {
+            ++i;
+            N_subset =  atoi(argv[i]);
+            cout << "The number of initial rankings considered of each unranked species tree candidate: " << N_subset << endl;
+
+        }
+        else if (strcmp(argv[i], "-maxsubset") == 0)
+        {
+            ++i;
+            N_maxsubset =  atoi(argv[i]);
+            cout << "The number of maximum rankings considered of each unranked species tree candidate: " << N_maxsubset << endl;
+
+        }
+        else if (strcmp(argv[i], "-lb") == 0)
+        {
+            ++i;
+            init_a =  atof(argv[i]);
+
+        }
+        else if (strcmp(argv[i], "-ub") == 0)
+        {
+            ++i;
+            init_b =  atof(argv[i]);
+
+        }
+        else if (strcmp(argv[i], "-tol") == 0)
+        {
+            ++i;
+            init_h =  atof(argv[i]);
+
+        }
+        else if (strcmp(argv[i], "-tiplen") == 0)
+        {
+            ++i;
+            x =  atof(argv[i]);
+
+        }
+        ++i;
+    }
+     
+
+    cout << "The time of the most recent clade is set to " << x << endl; 
+    cout << "Optimize branch lengths using L-BFGS method with tolerance " << init_h << endl;
+    cout << "Allow the branch length to be in the interval [" << init_a << ", " << init_b << "]" << endl;
+    cout << "Maximum number of NNI moves: " << N_nni << endl;
+    cout << "Stop if the difference between log-likelihoods is greater than " << diff << endl;
+
+    if(N_maxsubset == 0)  cout << "The number of maximum rankings considered of each unranked species tree candidate (default): 2*(Number of Taxa)" << endl;
+    if(N_subset == 0)     cout << "The number of initial rankings considered of each unranked species tree candidate (default): Number of Taxa" << endl;
+
+
     vector <Node *> v;
     int N = 0;
-    string initial_tree_string = pickInitialCandidate(sp_vect, gts_vect, newnode, N, v);
+    string initial_tree_string = pickInitialCandidate(sp_vect, gts_vect, newnode, N, v, init_h, init_a, init_b, N_initsubset);
     ofstream ftopi("outInitialTopo.txt", ios::out | ios::app);
     ftopi << initial_tree_string << ";" << endl;
+    cout << "Starting ranked species tree: " << initial_tree_string << ";" << endl;
     ftopi.close();
 
 
@@ -1543,7 +1698,6 @@ void calcLikeWithNNI(int & arg_counter, char* argv[])
 
     int tempo = 0;
     string out_str="";
-    double x = 0.1;
     writeTreeWithBrLengths(newnode, tempo, N, out_str, s, x);
     size_t maxQue = (size_t) N*(1+N)/2;
     makeBeadedTree(newnode, maxQue);
@@ -1584,7 +1738,7 @@ void calcLikeWithNNI(int & arg_counter, char* argv[])
     //      for(int index = 0; index < N - 2; ++index)
     //     {
 
-    threshold = lbfgs(init_h, s, N, v, ar_y, gts_vect);
+    threshold = lbfgs(init_h, s, N, v, ar_y, gts_vect, init_a, init_b);
     //cout  << " " << threshold << endl;
     // }
 
@@ -1602,7 +1756,7 @@ void calcLikeWithNNI(int & arg_counter, char* argv[])
 
     double old_threshold = 0.;
     int nni_counts = 0;
-    while(fabs(old_threshold - threshold) > 0.1 && nni_counts < N_nni)
+    while(fabs(old_threshold - threshold) > diff && nni_counts < N_nni)
     {
         //cout << "*************************** NNI **************************** " << nni_counts << endl;
         old_threshold = threshold;
@@ -1615,7 +1769,7 @@ void calcLikeWithNNI(int & arg_counter, char* argv[])
         {
 
             //cout << "*************************** nni **************************** " << i << endl;
-            readUnrankedTrees(str_vect[i], N, rounds, index_vector, ar_y, k, s, v, gts_vect, threshold, candidate_str, x);
+            readUnrankedTrees(str_vect[i], N, rounds, index_vector, ar_y, k, s, v, gts_vect, threshold, candidate_str, x, init_a, init_b, init_h, N_subset, N_maxsubset);
         }
         tempdist = 0.;
         lbl = 0;
@@ -2022,7 +2176,10 @@ double updateProbability(int & N, double * s, vector <Node *> v, Node * newnodeG
     return fin_prob;
 }
 
-double lbfgs(double h, double * s, int & N, vector <Node *> vlabels, int ** ar_y, vector<string> gts_vect)
+
+
+//L-BFGS method 
+double lbfgs(double h, double * s, int & N, vector <Node *> vlabels, int ** ar_y, vector<string> gts_vect, double init_a, double init_b)
 {
     /* Local variables */
     static double f, g[1024];
@@ -2093,95 +2250,5 @@ L111:
     return f;
 } 
 
-
-/*
-   double cpu_brent_improved(double a, double b, double * s, int index, int & N, vector <Node *> vlabels, int ** ar_y, int ***k, vector<string> gts_vect, vector<vector<vector<double>>> & vect)
-   {
-   double q, c, f_q, f_a, f_b, f_c;
-
-   s[index] = a;
-   int interval = index + 2;
-   f_a = updateNegativeLike(N, s, vlabels, ar_y, k, gts_vect, vect, interval);
-   s[index] = b;
-   f_b = updateNegativeLike(N, s, vlabels, ar_y, k, gts_vect, vect, interval);
-   cout << f_a << " " << f_b << endl; 
-//   if(a>b || f_a * f_b >= 0)   // The algorithm assumes a<b
-//   {
-//       return -1; // Root not bound by the given guesses
-//   }
-
-do{
-c = (a+b)/2;
-s[index] = c;
-f_c = updateNegativeLike(N, s, vlabels, ar_y, k, gts_vect, vect, interval);
-cout << interval << " " << c << " " << f_c << endl;
-if(fabs(f_a-f_c) > brent_tolerance && fabs(f_b-f_c) > brent_tolerance)  // f(a)!=f(c) and f(b)!=f(c)
-{
-// Inverse quadratic interpolation
-q = a*f_b*f_c/((f_a-f_b)*(f_a-f_c)) + b*f_a*f_c/((f_b-f_a)*(f_b-f_c)) + c*f_a*f_b/((f_c-f_a)*(f_c-f_b));
-}else{
-// Secant rule
-q = b - f_b*(b-a)/(f_b-f_a);
-}
-
-
-s[index] = q;
-cout << "q: " << q << endl;
-f_q = updateNegativeLike(N, s, vlabels, ar_y, k, gts_vect, vect, interval);
-if(c>q)
-{
-swap(q, c);
-}
-if(f_c*f_q < 0)
-{
-a = q;
-b = c;
-}else if(f_q*f_b < 0){
-a = c;
-}else{
-b = q;
-}
-}while(f_q < brent_tolerance || fabs(b-a)<brent_tolerance); // Convergence conditions
-cout << "f_q: " << f_q << endl; 
-return f_q;
-}
-
-
-// fp = (f(x + h) - f(x)) / h
-// fpp = (f(x+h) - 2*f(x) + f(x-h)) / h /h;
-double newtonRapson(double a, double h, double * s, int index, int & N, vector <Node *> vlabels, int ** ar_y, int ***k, vector<string> gts_vect, vector<vector<vector<double>>> & vect)
-{ 
-int interval = index + 2;
-// s[index] = a;
-double fx;
-//  s[index] = a + h;
-double fxph;
-// s[index] = a - h;
-double fxmh;
-double fp;
-double fpp;
-double val = 0;
-double new_val = a; 
-while(fabs(val-new_val) >= brent_tolerance)
-{
-
-val = new_val;
-s[index] = val;
-fx = updateNegativeLike(N, s, vlabels, ar_y, k, gts_vect, vect, interval);
-s[index] = val + h;
-fxph = updateNegativeLike(N, s, vlabels, ar_y, k, gts_vect, vect, interval);
-s[index] = val - h;
-fxmh = updateNegativeLike(N, s, vlabels, ar_y, k, gts_vect, vect, interval);
-
-fp = (fxph - fx)/h;
-fpp =  (fxph - 2*fx + fxmh)/h/h;
-new_val = val - fp/fpp;
-cout << fabs(val-new_val) << " " << fp/fpp << " " << new_val << endl;
-}
-
-s[index] = new_val;
-return updateNegativeLike(N, s, vlabels, ar_y, k, gts_vect, vect, interval);
-}
-*/
 
 
