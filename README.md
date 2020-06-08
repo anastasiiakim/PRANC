@@ -346,10 +346,28 @@ outGreedyCons.txt:
 ./pranc -like_nonni st_5taxon.txt -rgt rgt_5taxon.txt
 ```
 output:
+```
+Negative log-likelihood  = 10.0393
+The time of the most recent clade is set to 0.1
+Optimize branch lengths using L-BFGS method with tolerance 1e-10
+Allow the branch length to be in the interval [0.001, 6]
+Negative log-likelihood = 4.23458
+mse: 5.82943
+initial interval lengths
+0.299983 0.001005 0.607481 
+estimated interval lengths
+6 1.1754 0.271628 
+abs difference in interval lengths
+5.70002 1.1744 0.335853 
+```
 
 outNoNniMLTopo.txt (your estimated branch lengths will be slightly different):
 ```
 ((B:0.375797,E:0.375797):7.173825,(A:1.549622,(C:0.100000,D:0.100000):1.449622):6.000000);
+```
+The user may change the default settings
+```
+./pranc -like_nonni st_5taxon.txt -rgt rgt_5taxon.txt -lb 0.01 -ub 5 -tol 1e-08 -tiplen 0.1
 ```
 
 #### Example 12 (-like_nonni -ugt)
@@ -398,4 +416,29 @@ output:
 outWithNniMLTopo.txt (your estimated branch lengths and topology might be slightly different):
 ```
 (((E:0.100000,D:0.100000):0.592201,A:0.692201):0.255117,(B:0.246954,C:0.246954):0.700365);
+```
+
+#### Example 15 (-like_nni_brent -rgt)
+```
+./pranc -like_nni_brent st_5taxon.txt -rgt rgt_5taxon.txt
+```
+output:
+```
+The time of the most recent clade is set to 0.1
+Optimize branch lengths using Brent's method with epsilon 1e-06 and tolerance 1e-06
+Allow the branch length to be in the interval [0.001, 6]
+Maximum number of NNI moves: 5
+Stop if the difference between log-likelihoods is greater than 0.1
+The number of initial rankings considered of each unranked species tree candidate (default): Number of Taxa
+The number of round optimizations (default): Number of Taxa
+Negative log-likelihood: 4.23459
+```
+
+outWithNniMLTopo.txt (your estimated branch lengths and topology might be slightly different):
+```
+((B:0.375799,E:0.375799):7.173815,(A:1.549621,(C:0.100000,D:0.100000):1.449621):5.999993);
+```
+The user may change the default settings
+```
+./pranc -like_nni_brent st_5taxon.txt -rgt rgt_5taxon.txt nni 3 -diff 0.1 -startsubset 1 -maxsubset 3 -rounds 3  -lb 0.001 -ub 10 -tol 1e-10 -eps 1e-10 -tiplen 1
 ```
