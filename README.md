@@ -368,6 +368,7 @@ outNoNniMLTopo.txt (your estimated branch lengths will be slightly different):
 ./pranc -like_nni st_5taxon.txt -rgt rgt_5taxon.txt
 ```
 output:
+```
 The time of the most recent clade is set to 0.1
 Optimize branch lengths using L-BFGS method with tolerance 1e-10
 Allow the branch length to be in the interval [0.001, 6]
@@ -377,6 +378,7 @@ The number of maximum rankings considered of each unranked species tree candidat
 The number of initial rankings considered of each unranked species tree candidate (default): Number of Taxa
 Starting ranked species tree: ((B:1.488875,E:1.488875):0.300988,(A:1.489880,(C:0.881394,D:0.881394):0.608486):0.299983);
 Negative log-likelihood  = 4.23458
+```
 
 outWithNniMLTopo.txt (your estimated branch lengths and topology might be slightly different):
 ```
