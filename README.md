@@ -384,6 +384,10 @@ outWithNniMLTopo.txt (your estimated branch lengths and topology might be slight
 ```
 ((B:0.376472,E:0.376472):7.173572,(A:1.550044,(C:0.100000,D:0.100000):1.450044):6.000000);
 ```
+The user may change the default settings
+```
+./pranc -like_nni st_5taxon.txt -rgt rgt_5taxon.txt -nni 3 -diff 0.1 -startsubset 1 -initsubset 2 -maxsubset 3  -lb 0.0001 -ub 3 -tol 1e-10 -tiplen 0.1
+```
 
 #### Example 14 (-like_nni -ugt)
 ```
